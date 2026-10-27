@@ -1,40 +1,423 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Odra Bira | Machine Learning & Software Engineering</title>
-<meta name="description" content="Odra Bira, M.S. Computer Science student at the University at Buffalo. Explore computer vision, machine learning and full-stack projects, technical case studies, and résumé.">
-<meta name="theme-color" content="#09121c">
-<meta property="og:title" content="Odra Bira | Machine Learning & Software Engineering">
-<meta property="og:description" content="From image restoration models to useful applications. Projects, engineering experience and published work.">
-<meta property="og:type" content="website"><meta property="og:url" content="https://odra-bira.github.io/">
-<link rel="canonical" href="https://odra-bira.github.io/"><link rel="stylesheet" href="style.css">
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2309121c'/%3E%3Ctext x='32' y='42' text-anchor='middle' font-family='Arial' font-size='27' font-weight='bold' fill='%2366c4ff'%3EOB%3C/text%3E%3C/svg%3E">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Odra Bira Portfolio</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<meta name="description" content="Odra Bira — M.S. Computer Science at the University at Buffalo. LLM applications, computer vision and machine learning projects.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+/* Layout: dark editorial grid — hero with a live "training log" card, then About + Stack side by side, project cards with drawn thumbnails, research, experience, contact. Deliberately single dark theme to match the requested look. */
+:root{
+  --bg:#070d19; --panel:#0d1628; --panel-2:#111d33; --line:#1d2b45;
+  --fg:#e6edf8; --muted:#93a3bd; --accent:#4c8dff; --accent-soft:#16294d; --ok:#4ade80;
+  --display:"Sora","Segoe UI",system-ui,sans-serif;
+  --body:"Manrope","Segoe UI",system-ui,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
+a{color:inherit}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
+.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+
+/* nav */
+nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
+nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
+.logo{font-family:var(--display);font-weight:700;letter-spacing:.04em;text-decoration:none}
+.logo span{color:var(--accent)}
+.navlinks{display:flex;gap:22px;font-size:14px;color:var(--muted)}
+.navlinks a{text-decoration:none}
+.navlinks a:hover{color:var(--fg)}
+
+/* hero */
+.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+.hero::before{content:"";position:absolute;inset:0;background:
+  radial-gradient(60% 80% at 85% 10%,var(--accent-soft) 0%,transparent 60%),
+  linear-gradient(var(--line) 1px,transparent 1px) 0 0/48px 48px,
+  linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/48px 48px;
+  opacity:.55;mask-image:linear-gradient(180deg,#000 30%,transparent)}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-block:72px 64px}
+.avatar{display:block;width:140px;height:140px;max-width:100%;border-radius:50%;object-fit:cover;border:3px solid var(--accent);box-shadow:0 0 0 6px var(--accent-soft);margin-bottom:24px}
+.intro{min-width:0}
+.hero h1{font-size:clamp(44px,7vw,76px);letter-spacing:.02em;line-height:1.02}
+.hero h1 span{color:var(--accent)}
+.hero .sub{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:14px}
+.hero p.lead{font-size:18px;color:#c6d2e6;max-width:56ch;margin:22px 0 28px}
+.btns{display:flex;flex-wrap:wrap;gap:12px}
+.btn{display:inline-flex;align-items:center;gap:10px;padding:11px 18px;border:1px solid var(--line);border-radius:10px;background:var(--panel);text-decoration:none;font-weight:600;font-size:15px;transition:border-color .2s,transform .2s}
+.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#04101f}
+.btn svg{width:18px;height:18px;fill:currentColor}
+
+.log{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-family:var(--mono);font-size:12.5px;min-width:0;box-shadow:0 20px 60px -30px #000}
+.log .bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);color:var(--muted)}
+.log .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
+.log pre{margin:0;padding:16px;white-space:pre-wrap;word-break:break-word;color:#b9c6dc;line-height:1.7}
+.log .k{color:var(--accent)} .log .g{color:var(--ok)} .log .m{color:var(--muted)}
+
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:0}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
+.stat b{display:block;font-family:var(--display);font-size:36px;line-height:1.1;color:var(--accent)}
+.stat span{display:block;margin-top:6px;font-size:14px;color:var(--muted);line-height:1.45}
+
+/* sections */
+section{padding-block:72px}
+.sec-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:28px}
+.sec-head h2{font-size:clamp(26px,3.2vw,34px)}
+.sec-head h2::after{content:"";display:block;width:44px;height:3px;background:var(--accent);margin-top:10px;border-radius:2px}
+.sec-head a{color:var(--accent);text-decoration:none;font-weight:600;font-size:14px}
+
+.about{display:grid;grid-template-columns:1.25fr 1fr;gap:24px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;min-width:0}
+.panel h3{font-size:20px;margin-bottom:14px}
+.panel p{color:#c3cee1;margin:0 0 14px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.fact{border-left:2px solid var(--accent);padding:4px 0 4px 12px}
+.fact b{display:block;font-size:14px}
+.fact span{font-size:13.5px;color:var(--muted);line-height:1.45;display:block}
+.stack-group{margin-bottom:16px}
+.stack-group:last-child{margin-bottom:0}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.chip{font-family:var(--mono);font-size:12.5px;padding:5px 10px;border-radius:7px;background:var(--panel-2);border:1px solid var(--line);color:#cdd8ea}
+
+/* projects */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:border-color .2s,transform .2s}
+.card:hover{border-color:#2f4a7a;transform:translateY(-2px)}
+.thumb{aspect-ratio:16/8;max-width:100%;background:var(--panel-2);border-bottom:1px solid var(--line);display:block}
+.thumb svg{width:100%;height:100%;display:block}
+.card .body{padding:22px;display:flex;flex-direction:column;gap:12px;flex:1}
+.card h3{font-size:19px}
+.card p{margin:0;color:#c3cee1;font-size:15px}
+.metrics{display:flex;flex-wrap:wrap;gap:8px}
+.metric{font-family:var(--mono);font-size:12px;color:var(--fg);background:var(--accent-soft);border:1px solid #23406f;padding:4px 9px;border-radius:999px}
+.card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px}
+.card .foot a{color:var(--accent);text-decoration:none;font-weight:600;font-size:14px}
+.more{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+.mini{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:border-color .2s,transform .2s}
+.mini:hover{border-color:#2f4a7a;transform:translateY(-2px)}
+.mini .thumb{aspect-ratio:16/9}
+.mini .mb{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
+.mini h3{font-size:16px}
+.mini p{margin:0;color:var(--muted);font-size:14px}
+.mini a{color:var(--accent);text-decoration:none;font-weight:600;font-size:13.5px;margin-top:auto}
+.mini .mb > :last-child{margin-bottom:0}
+
+/* research */
+.research{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
+.research ul{margin:0;padding-left:18px;color:#c3cee1}
+.research li{margin-bottom:8px}
+table.res{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
+table.res th,table.res td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+table.res th{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.res-wrap{overflow-x:auto}
+.note{font-size:13px;color:var(--muted);margin-top:12px}
+
+/* experience */
+.timeline{display:grid;gap:14px}
+.job{display:grid;grid-template-columns:180px 1fr;gap:24px;padding:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
+.job .when{font-family:var(--mono);font-size:13px;color:var(--muted)}
+.job h3{font-size:17px}
+.job .org{color:var(--accent);font-weight:600;font-size:14.5px}
+.job p{margin:8px 0 0;color:#c3cee1;font-size:15px}
+
+/* contact */
+.contact{border-top:1px solid var(--line)}
+.contact .panel{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}
+.email{font-family:var(--mono);font-size:16px;user-select:all}
+.copy{cursor:pointer;font:inherit}
+footer{padding-block:28px;color:var(--muted);font-size:13px;text-align:center}
+
+@media (max-width:900px){
+  .hero .wrap,.about,.research{grid-template-columns:1fr}
+  .more{grid-template-columns:1fr 1fr}
+  .facts{grid-template-columns:1fr}
+}
+@media (max-width:640px){
+  .avatar{width:112px;height:112px}
+  .navlinks{display:none}
+  .grid,.more{grid-template-columns:1fr}
+  .job{grid-template-columns:1fr;gap:6px}
+  section{padding-block:52px}
+  .hero .wrap{padding-block:48px}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
 </head>
 <body>
-<a class="skip" href="#work">Skip to selected projects</a>
-<header class="header"><a href="#home" class="brand" aria-label="Odra Bira home">OB<span>.</span></a><nav aria-label="Main navigation"><a href="#work">Projects</a><a href="#experience">Experience</a><a href="#about">About</a><a href="#contact">Contact</a></nav><a class="nav-resume" href="#contact">Let’s connect <span aria-hidden="true">↗</span></a></header>
-<main id="home">
-<section class="hero wrap">
-<div class="hero-copy"><p class="eyebrow">ODRA BIRA <span class="location">BUFFALO, NEW YORK</span></p><h1>Building intelligence.<br><span>Making it useful.</span></h1><p class="intro">Machine learning, computer vision,<br>and the software that brings them to life.</p><p class="hero-description">I’m a Computer Science master’s student at the University at Buffalo. I build image restoration models, vision applications, and practical tools with Python, React, and FastAPI.</p><div class="actions"><a class="button" href="#work">Explore projects <span aria-hidden="true">↓</span></a><a class="button secondary" href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener noreferrer">View LinkedIn ↗</a></div><div class="socials"><a href="https://github.com/odra-bira" target="_blank" rel="noopener noreferrer">GitHub ↗</a><a href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="mailto:odrabira@gmail.com">Email ↗</a></div></div>
-<aside class="hero-note" aria-label="Technical focus"><div class="note-top"><span class="small-label">FROM MODEL TO APPLICATION</span><span class="note-mark" aria-hidden="true">OB / 2026</span></div><p class="note-heading">An engineering mindset.<br>A focus on applied ML.</p><div class="focus-row"><span>01</span><div><h2>Computer vision</h2><p>Image restoration, object detection,<br>and real-time pose estimation.</p></div></div><div class="focus-row"><span>02</span><div><h2>Machine learning</h2><p>Model development, comparative evaluation,<br>and failure-case analysis.</p></div></div><div class="focus-row"><span>03</span><div><h2>Software engineering</h2><p>Usable interfaces, APIs, and<br>validated application workflows.</p></div></div><a href="#work" class="note-footer">See the work behind the skills <span aria-hidden="true">↗</span></a></aside>
+
+<nav>
+  <div class="wrap">
+    <a class="logo" href="#top">ODRA <span>BIRA</span></a>
+    <div class="navlinks">
+      <a href="#about">About</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div class="intro">
+      <img class="avatar" src="data:image/jpeg;base64,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" alt="Portrait of Odra Bira" width="140" height="140">
+      <h1>ODRA <span>BIRA</span></h1>
+      <div class="sub">M.S. Computer Science @ University at Buffalo</div>
+      <p class="lead">I build LLM applications, computer vision systems and the software around them, from FastAPI back ends to trained models with measured results.</p>
+      <div class="btns">
+        <a class="btn" href="https://github.com/odra-bira" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.3 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>GitHub</a>
+        <a class="btn primary" href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21h-4V9Z"/></svg>LinkedIn</a>
+        <a class="btn" href="#projects"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h8v6H3V5Zm10 0h8v6h-8V5ZM3 13h8v6H3v-6Zm10 0h8v6h-8v-6Z"/></svg>Projects</a>
+      </div>
+    </div>
+    <div class="stats" aria-label="Highlights">
+      <div class="stat"><b>3.83</b><span>Graduate GPA, M.S. Computer Science</span></div>
+      <div class="stat"><b>7</b><span>AI/ML projects, from LLM apps to computer vision</span></div>
+      <div class="stat"><b>2</b><span>Industry roles in full-stack and software development</span></div>
+      <div class="stat"><b>1</b><span>Peer-reviewed publication (IJRASET, 2025)</span></div>
+    </div>
+  </div>
+</header>
+
+<section id="about">
+  <div class="wrap">
+    <div class="about">
+      <div class="panel">
+        <div class="sec-head" style="margin-bottom:18px"><h2>About Me</h2></div>
+        <p>I'm a Master's student in Computer Science at the University at Buffalo (AI/ML focus, 3.83 GPA). I like problems where a model has to become something people can use: a planner that runs on any LLM provider, a shadow-removal model behind a web app, a detector that turns photos into a cleanliness score.</p>
+        <p>In graduate research I work on safe planning with generative models, training and evaluating models on GPU servers. Before that I built REST services and tuned SQL performance in two industry roles.</p>
+        <div class="facts">
+          <div class="fact"><b>Focus areas</b><span>LLM apps &amp; RAG, computer vision, machine learning, software engineering</span></div>
+          <div class="fact"><b>Education</b><span>M.S. CS, University at Buffalo · B.Tech. CS (AI &amp; ML), KMIT</span></div>
+          <div class="fact"><b>Published</b><span>Fruit quality assessment with MobileNetV2 (IJRASET, 2025)</span></div>
+        </div>
+      </div>
+      <div class="panel">
+        <h3>Tech Stack</h3>
+        <div class="stack-group"><div class="eyebrow">Languages</div><div class="chips"><span class="chip">Python</span><span class="chip">JavaScript</span><span class="chip">SQL</span><span class="chip">Java</span><span class="chip">C/C++</span><span class="chip">Bash</span></div></div>
+        <div class="stack-group"><div class="eyebrow">LLMs &amp; generative AI</div><div class="chips"><span class="chip">Claude API</span><span class="chip">Gemini API</span><span class="chip">Ollama</span><span class="chip">RAG</span><span class="chip">BM25 + vector search</span><span class="chip">Reranking</span><span class="chip">Diffusion models</span></div></div>
+        <div class="stack-group"><div class="eyebrow">Machine learning &amp; CV</div><div class="chips"><span class="chip">PyTorch</span><span class="chip">TensorFlow/Keras</span><span class="chip">YOLOv8</span><span class="chip">OpenCV</span><span class="chip">MediaPipe</span><span class="chip">scikit-learn</span><span class="chip">NumPy</span><span class="chip">Pandas</span></div></div>
+        <div class="stack-group"><div class="eyebrow">Development &amp; tools</div><div class="chips"><span class="chip">FastAPI</span><span class="chip">Pydantic</span><span class="chip">React</span><span class="chip">Flask</span><span class="chip">Gradio</span><span class="chip">Docker</span><span class="chip">Git</span><span class="chip">Linux &amp; GPU servers</span><span class="chip">pytest</span></div></div>
+      </div>
+    </div>
+  </div>
 </section>
-<div class="credential-strip wrap"><div><strong>M.S. Computer Science</strong><span>University at Buffalo</span></div><div><strong>3.83 / 4.00</strong><span>Graduate GPA</span></div><div><strong>2 industry internships</strong><span>Software & full-stack development</span></div><div><strong>Published work</strong><span>Fruit quality classification</span></div></div>
-<section id="work" class="section wrap">
-<div class="section-heading"><div><p class="eyebrow">01 / SELECTED PROJECTS</p><h2>Built to solve a problem.</h2></div><p>Technical depth, visible results,<br>and code you can explore.</p></div>
-<article class="feature project"><div class="feature-visual"><span class="image-label">SHADOWFIX / IMAGE RESTORATION</span><div class="benchmark"><p class="benchmark-title">A measured improvement.</p><p class="benchmark-caption">Reported full-image PSNR · higher is better</p><div class="benchmark-item"><div><span>RGB baseline</span><strong>27.176 dB</strong></div><div class="bar-track"><div class="bar baseline" style="width:77.65%"></div></div></div><div class="benchmark-item"><div><span>Mask-guided U-Net</span><strong>30.189 dB</strong></div><div class="bar-track"><div class="bar" style="width:86.25%"></div></div></div><div class="benchmark-scale"><span>0</span><span>35 dB</span></div><p class="benchmark-gain">+3.01 dB <span>over the RGB baseline</span></p></div><div class="metric-row"><div><strong>30.19 <small>dB</small></strong><span>Reported PSNR</span></div><div><strong>0.9514</strong><span>Reported SSIM</span></div><div><strong>540</strong><span>ISTD test images</span></div></div></div><div class="feature-copy"><p class="eyebrow">FEATURED / COMPUTER VISION</p><h3>ShadowFix</h3><p class="project-subtitle">Restoring the scene behind the shadow.</p><p>Compared RGB-only, residual, and mask-guided U-Net models for shadow removal while preserving scene details.</p><ul class="project-points"><li>Built paired image, mask, and ground-truth evaluation workflows.</li><li>The mask-guided model reported a <strong>3.01 dB PSNR improvement</strong> over the RGB baseline.</li><li>Created automatic and guided restoration interfaces with Gradio.</li></ul><div class="tags"><span>PyTorch</span><span>U-Net</span><span>OpenCV</span><span>Gradio</span></div><div class="project-actions"><a class="button small" href="https://github.com/odra-bira/ShadowFix" target="_blank" rel="noopener noreferrer">View repository ↗</a><a href="#shadow-details">Technical case study ↓</a></div></div></article>
-<details id="shadow-details" class="case-study"><summary>ShadowFix — approach, evaluation & limitations</summary><div class="case-grid"><div><h4>The approach</h4><p>Train U-Net-style encoder–decoder models on paired ISTD images at 256 × 256 resolution. Compare RGB baselines with residual and mask-guided variants; evaluate the full image and shadow region separately.</p></div><div><h4>The evidence</h4><p>Reported mask-guided results: 30.189 dB PSNR and 0.9514 SSIM across 540 test images, versus 27.176 dB and 0.9324 for the RGB baseline. These are capstone results documented in the repository, not a fresh benchmark rerun.</p></div><div><h4>The tradeoffs</h4><p>Unfamiliar scenes can retain shadow traces or introduce washed-out dark areas, halos, and color shifts. The notebook requires separately supplied data, checkpoints, and project files to run.</p></div></div></details>
-<div class="project-grid">
-<article class="project card"><div class="card-top"><span class="eyebrow">02 / FULL-STACK APPLICATION</span><span class="category">Software</span></div><h3>StudyEase</h3><p class="project-subtitle">A study plan that accounts for real workloads.</p><p>Turns assignments, deadlines, and available time into manageable sessions. Connects a React interface to a FastAPI backend with LLM-assisted planning and deterministic schedule validation.</p><div class="architecture" aria-label="StudyEase architecture"><span>React</span><span aria-hidden="true">→</span><span>FastAPI</span><span aria-hidden="true">→</span><span>Planning & validation</span></div><div class="tags"><span>React</span><span>FastAPI</span><span>Python</span><span>Pydantic</span></div><details><summary>Engineering details</summary><p>Provider adapters support Gemini, Ollama, and Claude APIs. Validation and schedule repair check proposed plans, while demo mode supports basic planning without API credentials. Features include task breakdown, stress check-ins, and a break timer.</p><p>The public README documents the design; it also notes that the complete source archive is prepared separately for import.</p></details><a class="repo-link" href="https://github.com/odra-bira/Studyplanner" target="_blank" rel="noopener noreferrer">Explore project repository <span aria-hidden="true">↗</span></a></article>
-<article class="project card"><div class="card-top"><span class="eyebrow">03 / OBJECT DETECTION</span><span class="category">Vision</span></div><h3>Trash Detection</h3><p class="project-subtitle">Making litter visible and measurable.</p><p>A YOLOv8-based workflow for detecting litter, visualizing bounding boxes, producing trash-density heatmaps, and estimating a heuristic cleanliness score.</p><div class="architecture"><span>Image</span><span aria-hidden="true">→</span><span>YOLOv8</span><span aria-hidden="true">→</span><span>Detections & heatmap</span></div><div class="tags"><span>Python</span><span>YOLOv8</span><span>OpenCV</span><span>Gradio</span></div><details><summary>Engineering details</summary><p>Combines detection outputs with visual summaries and a Gradio interface. The repository includes training and inference code; the original trained checkpoint is not included. Cleanliness scores are heuristic rather than a validated environmental measure.</p></details><a class="repo-link" href="https://github.com/odra-bira/trash_detection" target="_blank" rel="noopener noreferrer">Explore project repository <span aria-hidden="true">↗</span></a></article>
-<article class="project card"><div class="card-top"><span class="eyebrow">04 / REAL-TIME VISION</span><span class="category">Vision</span></div><h3>Pose & Exercise Tracking</h3><p class="project-subtitle">Turning movement into repetition counts.</p><p>Uses webcam input and MediaPipe landmarks to calculate elbow angles, display live skeleton overlays, and count bicep-curl repetitions.</p><div class="tags"><span>Python</span><span>MediaPipe</span><span>OpenCV</span><span>NumPy</span></div><details><summary>Engineering details</summary><p>A two-state counter detects arm extension above 160° and flexion below 30°, using shoulder, elbow, and wrist landmarks. The implementation is a webcam-based notebook.</p></details><a class="repo-link" href="https://github.com/odra-bira/Real-Time-Pose-Detection-and-Exercise-Tracking-main" target="_blank" rel="noopener noreferrer">Explore project repository <span aria-hidden="true">↗</span></a></article>
-<article class="project card"><div class="card-top"><span class="eyebrow">05 / TRANSFER LEARNING</span><span class="category">ML</span></div><h3>Fruit Quality Classification</h3><p class="project-subtitle">From image classification to an application.</p><p>A MobileNetV2-based model classifies fresh and rotten apples, bananas, and oranges. A Flask application makes the saved Keras model available for inference.</p><div class="tags"><span>TensorFlow</span><span>MobileNetV2</span><span>Flask</span></div><details><summary>Engineering details</summary><p>Applies transfer learning to a six-class fruit-quality problem. The project connects model inference with a usable application and is associated with my published work.</p></details><a class="repo-link" href="https://github.com/odra-bira/agriculture-project" target="_blank" rel="noopener noreferrer">Explore project repository <span aria-hidden="true">↗</span></a></article>
-</div>
-<div class="more-work"><p><strong>More to explore</strong> <a href="https://github.com/odra-bira/comment-toxicity-clean" target="_blank" rel="noopener noreferrer">Comment Toxicity Classification ↗</a><span>BiLSTM · TensorFlow · Gradio</span></p><a href="https://github.com/odra-bira?tab=repositories" target="_blank" rel="noopener noreferrer">All repositories ↗</a></div>
+
+<section id="projects" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><h2>Featured Projects</h2><a href="https://github.com/odra-bira?tab=repositories" target="_blank" rel="noopener">View all repositories →</a></div>
+    <div class="grid">
+
+      <article class="card">
+        <div class="thumb" aria-hidden="true">
+          <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="200" fill="#0f1a2e"/>
+            <rect x="24" y="22" width="170" height="156" rx="10" fill="#14223b" stroke="#22365a"/>
+            <text x="40" y="48" fill="#e6edf8" font-family="Sora,sans-serif" font-size="15" font-weight="700">StudyEase</text>
+            <text x="40" y="66" fill="#93a3bd" font-family="Manrope,sans-serif" font-size="10">Weekly plan · 3 assignments</text>
+            <g font-family="JetBrains Mono,monospace" font-size="8.2" fill="#cdd8ea">
+              <rect x="40" y="80" width="138" height="22" rx="5" fill="#16294d"/><text x="48" y="94">Mon · Outline essay · 45m</text>
+              <rect x="40" y="108" width="138" height="22" rx="5" fill="#16294d"/><text x="48" y="122">Tue · DL problem set · 90m</text>
+              <rect x="40" y="136" width="138" height="22" rx="5" fill="#1b2a44"/><text x="48" y="150">Wed · Review &amp; submit · 30m</text>
+            </g>
+            <g font-family="JetBrains Mono,monospace" font-size="10">
+              <rect x="222" y="40" width="150" height="30" rx="8" fill="#14223b" stroke="#4c8dff"/><text x="236" y="59" fill="#e6edf8">ClaudeProvider</text>
+              <rect x="222" y="85" width="150" height="30" rx="8" fill="#14223b" stroke="#22365a"/><text x="236" y="104" fill="#cdd8ea">GeminiProvider</text>
+              <rect x="222" y="130" width="150" height="30" rx="8" fill="#14223b" stroke="#22365a"/><text x="236" y="149" fill="#cdd8ea">OllamaProvider</text>
+            </g>
+            <path d="M194 100 H214" stroke="#4c8dff" stroke-width="2"/>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>StudyEase — LLM-Powered Study Planner</h3>
+          <p>Turns assignments, deadlines and free time into a weekly study plan. A provider-agnostic LLM layer runs on Claude, Gemini or a local Ollama model, and a deterministic engine checks and repairs every plan the model drafts.</p>
+          <div class="metrics"><span class="metric">5 REST endpoints</span><span class="metric">3 LLM backends</span><span class="metric">35 pytest tests</span><span class="metric">PDF / image upload</span></div>
+          <div class="chips"><span class="chip">FastAPI</span><span class="chip">React</span><span class="chip">Pydantic</span><span class="chip">Claude &amp; Gemini APIs</span><span class="chip">Ollama</span></div>
+          <div class="foot"><a href="https://github.com/odra-bira/Studyplanner" target="_blank" rel="noopener">&lt;/&gt; Code</a></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="thumb" aria-hidden="true">
+          <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+            <defs>
+              <linearGradient id="ground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b7f6a"/><stop offset="1" stop-color="#6d6352"/></linearGradient>
+              <clipPath id="left"><rect width="200" height="200"/></clipPath>
+            </defs>
+            <rect width="400" height="200" fill="url(#ground)"/>
+            <g clip-path="url(#left)"><path d="M60 0 L150 0 L230 200 L90 200 Z" fill="#2a2620" opacity=".72"/></g>
+            <circle cx="120" cy="120" r="14" fill="#c7b89c"/><circle cx="300" cy="120" r="14" fill="#c7b89c"/>
+            <rect x="60" y="150" width="60" height="10" rx="3" fill="#a4977f"/><rect x="250" y="150" width="60" height="10" rx="3" fill="#a4977f"/>
+            <line x1="200" y1="0" x2="200" y2="200" stroke="#e6edf8" stroke-width="2"/>
+            <rect x="14" y="14" width="62" height="20" rx="5" fill="#070d19" opacity=".8"/><text x="22" y="28" fill="#e6edf8" font-family="JetBrains Mono,monospace" font-size="10">shadow</text>
+            <rect x="214" y="14" width="74" height="20" rx="5" fill="#070d19" opacity=".8"/><text x="222" y="28" fill="#4ade80" font-family="JetBrains Mono,monospace" font-size="10">restored</text>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>ShadowFix — Image Restoration</h3>
+          <p>Compared RGB, residual and mask-guided U-Nets for shadow removal on the ISTD benchmark, then put the best model behind a Gradio app with automatic and mask-guided modes.</p>
+          <div class="metrics"><span class="metric">30.19 dB PSNR</span><span class="metric">0.951 SSIM</span><span class="metric">+3.0 dB vs baseline</span><span class="metric">540 test images</span></div>
+          <div class="chips"><span class="chip">PyTorch</span><span class="chip">U-Net</span><span class="chip">Mixed precision</span><span class="chip">OpenCV</span><span class="chip">Gradio</span></div>
+          <div class="foot"><a href="https://github.com/odra-bira/ShadowFix" target="_blank" rel="noopener">&lt;/&gt; Code</a></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="thumb" aria-hidden="true">
+          <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="200" fill="#4f5b3f"/>
+            <g fill="#5d6a4a"><circle cx="40" cy="40" r="22"/><circle cx="330" cy="160" r="30"/><circle cx="210" cy="30" r="18"/><circle cx="120" cy="170" r="20"/></g>
+            <rect x="70" y="70" width="58" height="34" rx="6" fill="#dfe8f2" opacity=".85" transform="rotate(-12 99 87)"/>
+            <rect x="240" y="96" width="40" height="56" rx="8" fill="#c9d6e4" opacity=".8"/>
+            <g fill="none" stroke="#4ade80" stroke-width="2.5"><rect x="62" y="56" width="78" height="62"/><rect x="232" y="88" width="56" height="72"/></g>
+            <g font-family="JetBrains Mono,monospace" font-size="10" fill="#070d19"><rect x="62" y="42" width="92" height="14" fill="#4ade80"/><text x="66" y="52">plastic 0.82</text><rect x="232" y="74" width="80" height="14" fill="#4ade80"/><text x="236" y="84">bottle 0.77</text></g>
+            <rect x="300" y="14" width="86" height="40" rx="8" fill="#070d19" opacity=".85"/><text x="310" y="30" fill="#93a3bd" font-family="JetBrains Mono,monospace" font-size="9">cleanliness</text><text x="310" y="47" fill="#e6edf8" font-family="Sora,sans-serif" font-size="14" font-weight="700">64 / 100</text>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Trash Detection &amp; Cleanliness Scoring</h3>
+          <p>Fine-tuned YOLOv8n on the TACO litter dataset, then built density heatmaps and a confidence- and area-weighted 0–100 cleanliness score, available through a CLI and a Gradio dashboard.</p>
+          <div class="metrics"><span class="metric">0.78 precision</span><span class="metric">30 epochs · 640 px</span><span class="metric">unit-tested</span></div>
+          <div class="chips"><span class="chip">YOLOv8</span><span class="chip">OpenCV</span><span class="chip">Gradio</span><span class="chip">pytest</span></div>
+          <div class="foot"><a href="https://github.com/odra-bira/trash_detection" target="_blank" rel="noopener">&lt;/&gt; Code</a></div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="thumb" aria-hidden="true">
+          <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
+            <rect width="400" height="200" fill="#3a3027"/>
+            <rect x="0" y="150" width="400" height="50" fill="#2c241d"/>
+            <g stroke="#4c8dff" stroke-width="4" stroke-linecap="round" fill="none">
+              <path d="M200 50 L200 110"/><path d="M175 62 L225 62"/><path d="M175 62 L160 95 L182 70"/><path d="M225 62 L246 92"/><path d="M200 110 L182 150"/><path d="M200 110 L218 150"/>
+            </g>
+            <g fill="#4ade80"><circle cx="200" cy="38" r="10"/><circle cx="175" cy="62" r="5"/><circle cx="225" cy="62" r="5"/><circle cx="160" cy="95" r="5"/><circle cx="182" cy="70" r="5"/><circle cx="246" cy="92" r="5"/><circle cx="182" cy="150" r="5"/><circle cx="218" cy="150" r="5"/></g>
+            <path d="M168 88 A12 12 0 0 1 172 76" stroke="#e6edf8" stroke-width="2" fill="none"/>
+            <text x="120" y="82" fill="#e6edf8" font-family="JetBrains Mono,monospace" font-size="11">28°</text>
+            <rect x="14" y="14" width="96" height="40" rx="8" fill="#070d19" opacity=".85"/><text x="24" y="30" fill="#93a3bd" font-family="JetBrains Mono,monospace" font-size="9">curls</text><text x="24" y="47" fill="#e6edf8" font-family="Sora,sans-serif" font-size="15" font-weight="700">REPS 12</text>
+          </svg>
+        </div>
+        <div class="body">
+          <h3>Real-Time Pose &amp; Exercise Tracking</h3>
+          <p>Reads webcam frames with MediaPipe, computes the shoulder–elbow–wrist angle, and counts bicep curls with a two-state counter: extension above 160° arms it, flexion below 30° counts a rep.</p>
+          <div class="metrics"><span class="metric">live skeleton overlay</span><span class="metric">160° / 30° thresholds</span></div>
+          <div class="chips"><span class="chip">Python</span><span class="chip">MediaPipe</span><span class="chip">OpenCV</span><span class="chip">NumPy</span></div>
+          <div class="foot"><a href="https://github.com/odra-bira/Real-Time-Pose-Detection-and-Exercise-Tracking-main" target="_blank" rel="noopener">&lt;/&gt; Code</a></div>
+        </div>
+      </article>
+    </div>
+
+    <div class="more">
+      <div class="mini">
+        <div class="thumb" aria-hidden="true"><svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+<rect width="320" height="180" fill="#0f1a2e"/>
+<g font-family="JetBrains Mono,monospace" font-size="8.5" fill="#cdd8ea">
+<rect x="16" y="18" width="120" height="26" rx="6" fill="#14223b" stroke="#22365a"/><text x="24" y="35">doc_014 · chunk 3</text>
+<rect x="16" y="52" width="120" height="26" rx="6" fill="#14223b" stroke="#4c8dff"/><text x="24" y="69">doc_102 · chunk 7</text>
+<rect x="16" y="86" width="120" height="26" rx="6" fill="#14223b" stroke="#22365a"/><text x="24" y="103">doc_057 · chunk 1</text>
+<text x="16" y="134" fill="#93a3bd">BM25 + vector</text><text x="16" y="148" fill="#93a3bd">→ rerank</text>
+</g>
+<path d="M140 65 H162" stroke="#4c8dff" stroke-width="2"/>
+<rect x="166" y="28" width="138" height="110" rx="12" fill="#16294d"/>
+<g font-family="Manrope,sans-serif" font-size="10" fill="#e6edf8"><text x="178" y="50">Answer</text></g>
+<g fill="#93a3bd"><rect x="178" y="60" width="112" height="6" rx="3"/><rect x="178" y="74" width="96" height="6" rx="3"/><rect x="178" y="88" width="104" height="6" rx="3"/></g>
+<g font-family="JetBrains Mono,monospace" font-size="9" fill="#070d19"><rect x="178" y="106" width="22" height="16" rx="4" fill="#4c8dff"/><text x="183" y="117">[1]</text><rect x="204" y="106" width="22" height="16" rx="4" fill="#4c8dff"/><text x="209" y="117">[2]</text></g>
+</svg></div>
+        <div class="mb">
+        <div class="eyebrow">RAG · LLM</div>
+        <h3>SkinGPT — RAG Knowledge Assistant</h3>
+        <p>Hybrid BM25 + vector retrieval with cross-encoder reranking and cited answers, tuned against a 1,000-question benchmark to ~75% retrieval precision.</p>
+        </div>
+      </div>
+      <div class="mini">
+        <div class="thumb" aria-hidden="true"><svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+<rect width="320" height="180" fill="#0f1a2e"/>
+<rect x="16" y="20" width="132" height="64" rx="10" fill="#14223b" stroke="#22365a"/>
+<g fill="#93a3bd"><rect x="28" y="34" width="100" height="6" rx="3"/><rect x="28" y="48" width="84" height="6" rx="3"/><rect x="28" y="62" width="92" height="6" rx="3"/></g>
+<text x="16" y="110" fill="#93a3bd" font-family="JetBrains Mono,monospace" font-size="9">Bi-LSTM · 6 labels</text>
+<g font-family="JetBrains Mono,monospace" font-size="8.5" fill="#cdd8ea">
+<text x="168" y="30">toxic</text><rect x="234" y="22" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="22" width="58" height="9" rx="4" fill="#f87171"/>
+<text x="168" y="52">severe</text><rect x="234" y="44" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="44" width="14" height="9" rx="4" fill="#4c8dff"/>
+<text x="168" y="74">obscene</text><rect x="234" y="66" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="66" width="30" height="9" rx="4" fill="#4c8dff"/>
+<text x="168" y="96">threat</text><rect x="234" y="88" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="88" width="8" height="9" rx="4" fill="#4c8dff"/>
+<text x="168" y="118">insult</text><rect x="234" y="110" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="110" width="44" height="9" rx="4" fill="#f87171"/>
+<text x="168" y="140">identity</text><rect x="234" y="132" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="132" width="10" height="9" rx="4" fill="#4c8dff"/>
+</g>
+</svg></div>
+        <div class="mb">
+        <div class="eyebrow">NLP</div>
+        <h3>Comment Toxicity Classification</h3>
+        <p>Multi-label classifier for six toxicity labels on Jigsaw data: TextVectorization, a bidirectional LSTM and a Gradio demo.</p>
+        <a href="https://github.com/odra-bira/comment-toxicity-clean" target="_blank" rel="noopener">&lt;/&gt; Code</a>
+        </div>
+      </div>
+      <div class="mini">
+        <div class="thumb" aria-hidden="true"><svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
+<rect width="320" height="180" fill="#1c2a1f"/>
+<rect x="0" y="130" width="320" height="50" fill="#16221a"/>
+<circle cx="90" cy="96" r="38" fill="#d94b3d"/><path d="M90 58 q6 -14 16 -16" stroke="#5b3a1e" stroke-width="4" fill="none"/><ellipse cx="104" cy="52" rx="10" ry="5" fill="#4caf50" transform="rotate(-25 104 52)"/>
+<circle cx="232" cy="98" r="36" fill="#8a6a3c"/><circle cx="220" cy="88" r="8" fill="#5e4628"/><circle cx="244" cy="108" r="10" fill="#5e4628"/><circle cx="240" cy="80" r="5" fill="#5e4628"/>
+<g font-family="JetBrains Mono,monospace" font-size="9.5">
+<rect x="46" y="146" width="88" height="20" rx="5" fill="#4ade80"/><text x="54" y="160" fill="#070d19">fresh apple</text>
+<rect x="186" y="146" width="96" height="20" rx="5" fill="#f87171"/><text x="194" y="160" fill="#070d19">rotten apple</text>
+</g>
+<text x="16" y="24" fill="#cdd8ea" font-family="JetBrains Mono,monospace" font-size="9">MobileNetV2 · 224×224</text>
+</svg></div>
+        <div class="mb">
+        <div class="eyebrow">Transfer learning · Published</div>
+        <h3>Fruit Quality Classification</h3>
+        <p>MobileNetV2 model for six fresh/rotten fruit classes behind a Flask upload app. Published in IJRASET, 2025.</p>
+        <a href="https://doi.org/10.22214/ijraset.2025.68187" target="_blank" rel="noopener">Read the paper →</a>
+        </div>
+      </div>
+    </div>
+  </div>
 </section>
-<section id="experience" class="section wrap experience-section"><div><p class="eyebrow">02 / INDUSTRY EXPERIENCE</p><h2>Software built<br>with a team.</h2><p>Hands-on experience connecting frontend interfaces, backend services, and data.</p></div><div class="timeline"><article><div class="job-heading"><h3>Full Stack Developer</h3><span>JUN — AUG 2025</span></div><p class="company">Accentiqa Systems Pvt. Ltd.</p><p>Built React components and REST API services for enterprise workflows. Designed relational schemas and integrated frontend, backend, and database layers.</p><div class="tags"><span>React</span><span>REST APIs</span><span>Relational databases</span></div></article><article><div class="job-heading"><h3>Software Developer Intern</h3><span>MAY — AUG 2024</span></div><p class="company">Risposta Software India Pvt. Ltd.</p><p>Developed Python and JavaScript applications and REST APIs. Worked with React, Node.js, and SQL, and collaborated on feature delivery and reliability issues.</p><div class="tags"><span>Python</span><span>JavaScript</span><span>Node.js</span><span>SQL</span></div></article></div></section>
-<section id="about" class="section wrap about-section"><div><p class="eyebrow">03 / BACKGROUND</p><h2>Curious about models.<br>Committed to building.</h2><p>I enjoy the full path from understanding a problem to building and evaluating a working solution. My interests span computer vision, machine learning, NLP, and software engineering.</p><p>I’m interested in opportunities in machine learning engineering, computer vision, and software development.</p><div class="education"><h3>University at Buffalo, SUNY</h3><p>M.S. Computer Science · Aug 2025 – Present<br>GPA 3.83 / 4.00</p></div><div class="education"><h3>Keshav Memorial Institute of Technology</h3><p>B.Tech Computer Science (AI & ML) · 2025<br>GPA 8.4 / 10</p></div></div><div class="skills-panel"><h3>Technical toolkit</h3><div><h4>Languages</h4><p>Python · Java · C++ · JavaScript · SQL</p></div><div><h4>Machine learning & vision</h4><p>PyTorch · TensorFlow · OpenCV · scikit-learn · MediaPipe · NumPy · Pandas</p></div><div><h4>Applications & engineering</h4><p>React · FastAPI · Flask · Gradio · Node.js · Docker · Git</p></div><div class="skills-footer">Explore the projects above to see these tools in context.</div></div></section>
-<section id="publication" class="wrap publication"><div><p class="eyebrow">04 / PUBLICATION</p><h2>Work beyond the code.</h2></div><article><span class="small-label">IJRASET / 2025</span><h3>Automated Assessment of Fruit Quality Using Transfer Learning and MobileNetV2</h3><p>Odra Bira · Sreeja Sunkeswaram · Naresh R</p><a href="https://doi.org/10.22214/ijraset.2025.68187" target="_blank" rel="noopener noreferrer">Read publication ↗</a></article></section>
-<section id="contact" class="wrap contact"><p class="eyebrow">05 / LET’S CONNECT</p><h2>Have a problem<br>worth building for?</h2><p>Let’s talk about machine learning, computer vision,<br>or your next software engineering opportunity.</p><a class="email" href="mailto:odrabira@gmail.com">odrabira@gmail.com <span aria-hidden="true">↗</span></a><div class="actions"><a class="button" href="mailto:odrabira@gmail.com">Get in touch</a><a class="button secondary" href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener noreferrer">View LinkedIn ↗</a></div><div class="socials"><a href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener noreferrer">LinkedIn ↗</a><a href="https://github.com/odra-bira" target="_blank" rel="noopener noreferrer">GitHub ↗</a></div></section>
-</main><footer class="wrap"><span>© 2026 Odra Bira</span><span>Machine learning · Computer vision · Software</span><a href="#home">Back to top ↑</a></footer>
-</body></html>
+
+<section id="experience" style="padding-top:0">
+  <div class="wrap">
+    <div class="sec-head"><h2>Experience</h2></div>
+    <div class="timeline">
+      <div class="job"><div class="when">Oct 2025 – Present</div><div><h3>Graduate Student Researcher</h3><div class="org">University at Buffalo</div><p>Research on safe planning with generative models: training and evaluating deep learning models on GPU servers and keeping research code reproducible.</p></div></div>
+      <div class="job"><div class="when">Jun 2025 – Aug 2025</div><div><h3>Full Stack Developer</h3><div class="org">Accentiqa Systems Pvt. Ltd.</div><p>Built back-end services and REST APIs behind React front ends for enterprise workflows, with relational schemas and end-to-end CRUD across UI, service and data layers.</p></div></div>
+      <div class="job"><div class="when">May 2024 – Aug 2024</div><div><h3>Software Developer Intern</h3><div class="org">Risposta Software India Pvt. Ltd.</div><p>Cut page-load time 30% and data latency 20% by profiling and optimizing the SQL behind REST APIs, while shipping React and Node.js features.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<section id="contact" class="contact">
+  <div class="wrap">
+    <div class="panel">
+      <div>
+        <h2 style="font-size:26px">Let's talk</h2>
+        <p style="margin:6px 0 0;color:var(--muted)">Open to AI/ML engineering and LLM application roles. Based in Buffalo, NY.</p>
+      </div>
+      <div class="btns" style="align-items:center">
+        <span class="email" id="email">odrabira@gmail.com</span>
+        <button class="btn copy" id="copyEmail" type="button">Copy email</button>
+        <a class="btn" href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener">LinkedIn</a>
+      </div>
+    </div>
+  </div>
+</section>
+<footer><div class="wrap">© 2026 Odra Bira · Built with HTML &amp; CSS</div></footer>
+
+<script>
+(function(){
+  var b=document.getElementById('copyEmail');
+  b.addEventListener('click',function(){
+    var t=document.getElementById('email').textContent;
+    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy email'},1600)};
+    var sel=function(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected — press Ctrl/Cmd+C'};
+    try{navigator.clipboard.writeText(t).then(done,sel)}catch(e){sel()}
+  });
+})();
+</script>
+</body>
+</html>
