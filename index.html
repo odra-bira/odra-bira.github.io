@@ -379,7 +379,7 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
     <div class="stats">
     <div class="stat spot"><strong class="tnum"><span data-count="3.83" data-dec="2">3.83</span></strong><span>Graduate GPA, M.S. Computer Science</span></div>
     <div class="stat spot"><strong class="tnum"><span data-count="3">3</span></strong><span>Engineering roles: research and industry</span></div>
-    <div class="stat spot"><strong class="tnum"><span data-count="12">12</span><em>+</em></strong><span>AI/ML projects, from LLMs to vision</span></div>
+    <div class="stat spot"><strong class="tnum"><span data-count="13">13</span><em>+</em></strong><span>AI/ML projects, from LLMs to vision</span></div>
     <div class="stat spot"><strong class="tnum"><span data-count="1">1</span></strong><span>Peer-reviewed publication (IJRASET 2025)</span></div>
   </div>
   </div>
@@ -597,13 +597,14 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
   <!-- MORE PROJECTS -->
   <section id="projects">
-    <div class="sec-head reveal"><div><div class="eyebrow">05 · More projects</div><h2>From first principles to deployed demos.</h2></div><p>Coursework at UB and personal builds: Transformers from scratch, LLM fine-tuning, reinforcement learning and statistical learning.</p></div>
+    <div class="sec-head reveal"><div><div class="eyebrow">05 · More projects</div><h2>From first principles to deployed demos.</h2></div><p>Coursework at UB and personal builds: Transformers from scratch, LLM fine-tuning, an OS kernel in C, reinforcement learning and statistical learning.</p></div>
     <div class="filters reveal" role="group" aria-label="Filter projects">
       <button type="button" data-f="all" aria-pressed="true">All</button>
       <button type="button" data-f="llm" aria-pressed="false">LLMs &amp; NLP</button>
       <button type="button" data-f="cv" aria-pressed="false">Computer vision</button>
       <button type="button" data-f="dl" aria-pressed="false">Deep learning</button>
       <button type="button" data-f="ml" aria-pressed="false">ML &amp; RL</button>
+      <button type="button" data-f="sys" aria-pressed="false">Systems</button>
     </div>
     <div class="grid" id="grid">
       <article class="pcard card spot reveal" data-cat="llm dl">
@@ -666,13 +667,13 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <div class="chips"><span class="chip">NumPy</span><span class="chip">pandas</span><span class="chip">Optimization</span></div>
         <div class="foot"><span>Course project</span></div></div>
       </article>
-      <article class="pcard card spot reveal" data-cat="cv">
-        <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l5-4 4 3 3-2 6 5"/></svg></div>
-        <div class="pcard-body"><span class="cat">Computer vision · Capstone</span><h3>ShadowFix: model ablation</h3>
-        <p>RGB, residual and mask-guided U-Nets compared on the same 540-image test split, with region-split PSNR to expose over-correction.</p>
-        <div class="kpi">+3.0 dB overall · +2.2 dB inside shadows</div>
-        <div class="chips"><span class="chip">U-Net</span><span class="chip">AMP</span><span class="chip">PSNR / SSIM</span></div>
-        <div class="foot"><span>Evaluation</span><a href="https://github.com/odra-bira/ShadowFix" target="_blank" rel="noopener">Results →</a></div></div>
+      <article class="pcard card spot reveal" data-cat="sys">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 2v3M15 2v3M9 19v3M15 19v3M2 9h3M2 15h3M19 9h3M19 15h3"/></svg></div>
+        <div class="pcard-body"><span class="cat">Operating systems · CSE 521</span><h3>Pintos OS Kernel in C</h3>
+        <p>Extended the Pintos x86 kernel with a team of 3: an alarm clock without busy-waiting, priority scheduling with nested priority donation, and a 4.4BSD multilevel feedback queue scheduler using fixed-point math.</p>
+        <p>User programs: argument passing on the user stack, 13 system calls with user-pointer validation, per-process file descriptors and exec/wait synchronization with semaphores.</p>
+        <div class="chips"><span class="chip">C</span><span class="chip">x86</span><span class="chip">QEMU</span><span class="chip">Scheduling</span><span class="chip">Syscalls</span></div>
+        <div class="foot"><span>Course project</span></div></div>
       </article>
     </div>
   </section>
