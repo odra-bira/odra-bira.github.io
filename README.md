@@ -12,14 +12,12 @@ Personal portfolio for my computer vision, machine learning, and software projec
 | Real-Time Pose Detection | Webcam landmarks, joint angles, and curl counting | [Source and setup](https://github.com/odra-bira/Real-Time-Pose-Detection-and-Exercise-Tracking-main) |
 | Comment Toxicity Classification | Bidirectional LSTM and a Gradio demo | [Source and setup](https://github.com/odra-bira/comment-toxicity-clean) |
 
-The website also describes other projects. Public implementations for those projects are not included in this repository.
-
 ## Site structure
 
 | File | Purpose |
 | --- | --- |
-| `index.html` | Portfolio content and navigation |
-| `style.css` | Layout, typography, and responsive styles |
+| `index.html` | Portfolio content, styles and animations (single file) |
+| `assets/` | Profile photo and ShadowFix before/after images |
 | `Odra_Bira_Resume.pdf` | Downloadable résumé |
 
 ## Preview locally
@@ -30,7 +28,7 @@ cd odra-bira.github.io
 python -m http.server 8000
 ```
 
-Open http://localhost:8000. The site uses static HTML and CSS and has no build step.
+Open http://localhost:8000. The site is static HTML, CSS and vanilla JavaScript with no build step.
 
 ## Author
 
