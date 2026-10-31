@@ -3,422 +3,855 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Odra Bira Portfolio</title>
+<meta name="theme-color" content="#060B13">
+<title>Odra Bira</title>
 <meta name="claude:viewport-fit-sides" content="cover">
-<meta name="description" content="Odra Bira — M.S. Computer Science at the University at Buffalo. LLM applications, computer vision and machine learning projects.">
+<meta name="description" content="Odra Bira: AI/ML engineer building LLM applications, RAG pipelines, diffusion planners and computer vision systems. M.S. Computer Science, University at Buffalo.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Sora:wght@500;600;700&family=Manrope:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
-/* Layout: dark editorial grid — hero with a live "training log" card, then About + Stack side by side, project cards with drawn thumbnails, research, experience, contact. Deliberately single dark theme to match the requested look. */
+/* Layout: one dark canvas. Hero (identity + live terminal) → stack marquee → about → experience timeline → 4 featured case studies with animated visuals → filterable project grid → publication → contact. */
 :root{
-  --bg:#070d19; --panel:#0d1628; --panel-2:#111d33; --line:#1d2b45;
-  --fg:#e6edf8; --muted:#93a3bd; --accent:#4c8dff; --accent-soft:#16294d; --ok:#4ade80;
-  --display:"Sora","Segoe UI",system-ui,sans-serif;
-  --body:"Manrope","Segoe UI",system-ui,sans-serif;
-  --mono:"JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;
   color-scheme:dark;
+  --bg:#060B13; --bg2:#08111C; --panel:#0C1624; --panel2:#0F1C2D; --line:#1B2A3D; --line2:#25384F;
+  --text:#E8EEF6; --muted:#8FA3BA; --dim:#5D7189;
+  --accent:#4FA3FF; --accent2:#8BC6FF; --glow:rgba(79,163,255,.35); --ok:#3DDC97; --warn:#FFB547; --hot:#FF6B6B;
+  --display:"Syne",ui-sans-serif,system-ui,sans-serif;
+  --body:"DM Sans",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--fg);font-family:var(--body);font-size:16px;line-height:1.6;margin:0}
-a{color:inherit}
-.wrap{max-width:1180px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
-h1,h2,h3{font-family:var(--display);text-wrap:balance;margin:0}
-.eyebrow{font-family:var(--mono);font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
-:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+html{scroll-behavior:smooth;scroll-padding-top:84px}
+body{margin:0;background:var(--bg);color:var(--text);font:16px/1.65 var(--body);overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+a:focus-visible,button:focus-visible,input:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:6px}
+h1,h2,h3,h4{font-family:var(--display);margin:0;line-height:1.08;text-wrap:balance;letter-spacing:-.02em}
+p{margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding-left:max(20px,env(safe-area-inset-left,0px));padding-right:max(20px,env(safe-area-inset-right,0px))}
+.mono{font-family:var(--mono)}
+.eyebrow{font:500 12px/1 var(--mono);letter-spacing:.16em;text-transform:uppercase;color:var(--accent)}
+.muted{color:var(--muted)}
+.tnum{font-variant-numeric:tabular-nums}
+
+/* background */
+#net{position:fixed;inset:0;width:100%;height:100%;z-index:0;pointer-events:none;opacity:.55}
+.bg-grid{position:fixed;inset:0;z-index:0;pointer-events:none;
+  background-image:linear-gradient(rgba(79,163,255,.045) 1px,transparent 1px),linear-gradient(90deg,rgba(79,163,255,.045) 1px,transparent 1px);
+  background-size:64px 64px;mask-image:radial-gradient(ellipse 80% 60% at 50% 0%,#000 30%,transparent 75%)}
+.glow-orb{position:fixed;width:620px;height:620px;border-radius:50%;top:-260px;right:-180px;z-index:0;pointer-events:none;
+  background:radial-gradient(circle,rgba(79,163,255,.16),transparent 65%);filter:blur(10px)}
+main,header,footer{position:relative;z-index:1}
 
 /* nav */
-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:color-mix(in srgb,var(--bg) 88%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
-body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:21;background:var(--bg)}
-nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:16px;padding-block:14px}
-.logo{font-family:var(--display);font-weight:700;letter-spacing:.04em;text-decoration:none}
-.logo span{color:var(--accent)}
-.navlinks{display:flex;gap:22px;font-size:14px;color:var(--muted)}
-.navlinks a{text-decoration:none}
-.navlinks a:hover{color:var(--fg)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:60;background:rgba(6,11,19,.85)}
+header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  background:rgba(6,11,19,.72);border-bottom:1px solid rgba(27,42,61,.7)}
+.nav-in{display:flex;align-items:center;justify-content:space-between;gap:20px;height:68px}
+.logo{font:800 20px/1 var(--display);letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.logo i{font-style:normal;color:var(--accent)}
+.logo-mark{width:30px;height:30px;border-radius:8px;display:grid;place-items:center;font:700 12px/1 var(--mono);color:var(--bg);
+  background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.nav-links{display:flex;gap:26px;font-size:14px;color:var(--muted)}
+.nav-links a{position:relative;transition:color .2s}
+.nav-links a:hover,.nav-links a.active{color:var(--text)}
+.nav-links a.active::after{content:"";position:absolute;left:0;right:0;bottom:-8px;height:2px;border-radius:2px;background:var(--accent)}
+.progress{position:absolute;left:0;bottom:-1px;height:2px;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));box-shadow:0 0 12px var(--glow)}
+.btn{display:inline-flex;align-items:center;gap:9px;padding:11px 18px;border-radius:10px;font:600 14px/1 var(--body);border:1px solid var(--line2);
+  background:rgba(15,28,45,.6);color:var(--text);cursor:pointer;transition:transform .2s,border-color .2s,background .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-2px);border-color:var(--accent);box-shadow:0 8px 24px -10px var(--glow)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#04111F}
+.btn.primary:hover{background:var(--accent2)}
+.btn svg{width:16px;height:16px;fill:currentColor;flex:none}
+.btn.sm{padding:9px 14px;font-size:13px}
 
 /* hero */
-.hero{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
-.hero::before{content:"";position:absolute;inset:0;background:
-  radial-gradient(60% 80% at 85% 10%,var(--accent-soft) 0%,transparent 60%),
-  linear-gradient(var(--line) 1px,transparent 1px) 0 0/48px 48px,
-  linear-gradient(90deg,var(--line) 1px,transparent 1px) 0 0/48px 48px;
-  opacity:.55;mask-image:linear-gradient(180deg,#000 30%,transparent)}
-.hero .wrap{position:relative;display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:center;padding-block:72px 64px}
-.avatar{display:block;width:140px;height:140px;max-width:100%;border-radius:50%;object-fit:cover;border:3px solid var(--accent);box-shadow:0 0 0 6px var(--accent-soft);margin-bottom:24px}
-.intro{min-width:0}
-.hero h1{font-size:clamp(44px,7vw,76px);letter-spacing:.02em;line-height:1.02}
-.hero h1 span{color:var(--accent)}
-.hero .sub{font-family:var(--mono);font-size:13px;letter-spacing:.22em;text-transform:uppercase;color:var(--muted);margin-top:14px}
-.hero p.lead{font-size:18px;color:#c6d2e6;max-width:56ch;margin:22px 0 28px}
-.btns{display:flex;flex-wrap:wrap;gap:12px}
-.btn{display:inline-flex;align-items:center;gap:10px;padding:11px 18px;border:1px solid var(--line);border-radius:10px;background:var(--panel);text-decoration:none;font-weight:600;font-size:15px;transition:border-color .2s,transform .2s}
-.btn:hover{border-color:var(--accent);transform:translateY(-1px)}
-.btn.primary{background:var(--accent);border-color:var(--accent);color:#04101f}
-.btn svg{width:18px;height:18px;fill:currentColor}
+.hero{display:grid;grid-template-columns:1.1fr .9fr;gap:56px;align-items:center;padding-block:72px 40px}
+.hero>*{min-width:0}
+.avatar-wrap{position:relative;width:116px;height:116px;margin-bottom:26px}
+.avatar-ring{position:absolute;inset:-5px;border-radius:50%;background:conic-gradient(from 0deg,var(--accent),transparent 35%,var(--accent2) 60%,transparent 85%,var(--accent));animation:spin 6s linear infinite}
+.avatar-wrap img{position:relative;width:100%;height:100%;border-radius:50%;object-fit:cover;border:4px solid var(--bg);display:block}
+.status-dot{position:absolute;right:4px;bottom:6px;width:18px;height:18px;border-radius:50%;background:var(--ok);border:3px solid var(--bg)}
+.status-dot::after{content:"";position:absolute;inset:-3px;border-radius:50%;border:2px solid var(--ok);animation:ping 2s ease-out infinite}
+.hero h1{font-size:clamp(46px,7vw,88px);font-weight:800;letter-spacing:-.04em;margin-top:14px}
+.hero h1 span{background:linear-gradient(100deg,var(--accent) 10%,var(--accent2) 60%,#fff 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.typed{font:500 clamp(18px,2.2vw,24px)/1.35 var(--body);margin-top:18px;min-height:1.4em;color:#C9D6E5}
+.typed b{color:var(--text);font-weight:600}
+.caret{display:inline-block;width:2px;height:1.05em;background:var(--accent);vertical-align:-2px;margin-left:3px;animation:blink 1s steps(1) infinite}
+.lede{margin-top:16px;max-width:52ch;color:var(--muted);font-size:16px}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
 
-.log{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;font-family:var(--mono);font-size:12.5px;min-width:0;box-shadow:0 20px 60px -30px #000}
-.log .bar{display:flex;align-items:center;gap:8px;padding:10px 14px;border-bottom:1px solid var(--line);color:var(--muted)}
-.log .dot{width:9px;height:9px;border-radius:50%;background:var(--line)}
-.log pre{margin:0;padding:16px;white-space:pre-wrap;word-break:break-word;color:#b9c6dc;line-height:1.7}
-.log .k{color:var(--accent)} .log .g{color:var(--ok)} .log .m{color:var(--muted)}
+.term{background:linear-gradient(180deg,rgba(15,28,45,.92),rgba(10,19,31,.92));border:1px solid var(--line2);border-radius:16px;overflow:hidden;
+  box-shadow:0 30px 80px -30px rgba(0,0,0,.8),0 0 0 1px rgba(79,163,255,.06) inset;transform:perspective(1200px) rotateY(-4deg) rotateX(2deg);transition:transform .5s}
+.term:hover{transform:none}
+.term-bar{display:flex;align-items:center;gap:7px;padding:12px 16px;border-bottom:1px solid var(--line)}
+.term-bar i{width:11px;height:11px;border-radius:50%;background:#2A3A4F}
+.term-bar i:nth-child(1){background:#FF5F57}.term-bar i:nth-child(2){background:#FEBC2E}.term-bar i:nth-child(3){background:#28C840}
+.term-bar span{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+.term-body{padding:20px 20px 22px;font:13.5px/1.75 var(--mono);color:#B9C8DA;min-height:300px}
+.term-body .p{color:var(--accent)}.term-body .k{color:#C792EA}.term-body .s{color:#C3E88D}.term-body .n{color:var(--warn)}.term-body .c{color:var(--dim)}
+.term-line{white-space:pre-wrap;word-break:break-word}
 
-.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px;min-width:0}
-.stat{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:20px}
-.stat b{display:block;font-family:var(--display);font-size:36px;line-height:1.1;color:var(--accent)}
-.stat span{display:block;margin-top:6px;font-size:14px;color:var(--muted);line-height:1.45}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px;padding-bottom:30px}
+.stat{padding:18px 18px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(12,22,36,.6)}
+.stat strong{display:block;font:700 34px/1 var(--display);letter-spacing:-.03em}
+.stat strong em{font-style:normal;color:var(--accent)}
+.stat>span{display:block;margin-top:8px;font-size:13px;color:var(--muted);line-height:1.35}
+
+/* marquee */
+.marquee{border-block:1px solid var(--line);background:rgba(8,17,28,.7);overflow:hidden;padding-block:16px;margin-top:10px}
+.track{display:flex;gap:44px;width:max-content;animation:scroll 40s linear infinite}
+.marquee:hover .track{animation-play-state:paused}
+.track span{font:500 14px/1 var(--mono);color:var(--muted);white-space:nowrap;display:flex;align-items:center;gap:44px}
+.track span::after{content:"◆";color:var(--accent);font-size:8px}
 
 /* sections */
-section{padding-block:72px}
-.sec-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:28px}
-.sec-head h2{font-size:clamp(26px,3.2vw,34px)}
-.sec-head h2::after{content:"";display:block;width:44px;height:3px;background:var(--accent);margin-top:10px;border-radius:2px}
-.sec-head a{color:var(--accent);text-decoration:none;font-weight:600;font-size:14px}
+section{padding-block:96px 0}
+.sec-head{display:flex;justify-content:space-between;align-items:end;gap:24px;flex-wrap:wrap;margin-bottom:40px}
+.sec-head h2{font-size:clamp(34px,4.6vw,56px);font-weight:800;margin-top:12px}
+.sec-head p{max-width:46ch;color:var(--muted)}
 
-.about{display:grid;grid-template-columns:1.25fr 1fr;gap:24px}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:28px;min-width:0}
-.panel h3{font-size:20px;margin-bottom:14px}
-.panel p{color:#c3cee1;margin:0 0 14px}
-.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
-.fact{border-left:2px solid var(--accent);padding:4px 0 4px 12px}
-.fact b{display:block;font-size:14px}
-.fact span{font-size:13.5px;color:var(--muted);line-height:1.45;display:block}
-.stack-group{margin-bottom:16px}
-.stack-group:last-child{margin-bottom:0}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
-.chip{font-family:var(--mono);font-size:12.5px;padding:5px 10px;border-radius:7px;background:var(--panel-2);border:1px solid var(--line);color:#cdd8ea}
-
-/* projects */
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px}
-.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:border-color .2s,transform .2s}
-.card:hover{border-color:#2f4a7a;transform:translateY(-2px)}
-.thumb{aspect-ratio:16/8;max-width:100%;background:var(--panel-2);border-bottom:1px solid var(--line);display:block}
-.thumb svg{width:100%;height:100%;display:block}
-.card .body{padding:22px;display:flex;flex-direction:column;gap:12px;flex:1}
-.card h3{font-size:19px}
-.card p{margin:0;color:#c3cee1;font-size:15px}
-.metrics{display:flex;flex-wrap:wrap;gap:8px}
-.metric{font-family:var(--mono);font-size:12px;color:var(--fg);background:var(--accent-soft);border:1px solid #23406f;padding:4px 9px;border-radius:999px}
-.card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:6px}
-.card .foot a{color:var(--accent);text-decoration:none;font-weight:600;font-size:14px}
-.more{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
-.mini{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;min-width:0;transition:border-color .2s,transform .2s}
-.mini:hover{border-color:#2f4a7a;transform:translateY(-2px)}
-.mini .thumb{aspect-ratio:16/9}
-.mini .mb{padding:18px 20px 20px;display:flex;flex-direction:column;gap:8px;flex:1}
-.mini h3{font-size:16px}
-.mini p{margin:0;color:var(--muted);font-size:14px}
-.mini a{color:var(--accent);text-decoration:none;font-weight:600;font-size:13.5px;margin-top:auto}
-.mini .mb > :last-child{margin-bottom:0}
-
-/* research */
-.research{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}
-.research ul{margin:0;padding-left:18px;color:#c3cee1}
-.research li{margin-bottom:8px}
-table.res{width:100%;border-collapse:collapse;font-size:14px;font-variant-numeric:tabular-nums}
-table.res th,table.res td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
-table.res th{font-family:var(--mono);font-weight:500;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
-.res-wrap{overflow-x:auto}
-.note{font-size:13px;color:var(--muted);margin-top:12px}
+/* about */
+.about{display:grid;grid-template-columns:1.1fr .9fr;gap:28px}
+.about>*{min-width:0}
+.card{background:linear-gradient(180deg,rgba(15,28,45,.75),rgba(11,21,34,.75));border:1px solid var(--line);border-radius:18px;padding:30px;position:relative;overflow:hidden}
+.about-text p{color:#C3D0DF;font-size:17px;line-height:1.7;margin-bottom:16px}
+.about-text p strong{color:var(--text);font-weight:600}
+.edu{display:grid;gap:14px;margin-top:22px;padding-top:22px;border-top:1px solid var(--line)}
+.edu-row{display:flex;justify-content:space-between;gap:16px;align-items:baseline}
+.edu-row h4{font:600 16px/1.3 var(--body);letter-spacing:0}
+.edu-row p{font-size:14px;color:var(--muted)}
+.edu-row .mono{font-size:12px;color:var(--accent);white-space:nowrap}
+.skill-group{padding-block:14px;border-bottom:1px solid var(--line)}
+.skill-group:last-child{border-bottom:0;padding-bottom:0}
+.skill-group:first-of-type{padding-top:0}
+.skill-group h4{font:500 12px/1 var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin-bottom:10px}
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip{font:500 12.5px/1 var(--mono);padding:7px 10px;border-radius:7px;border:1px solid var(--line2);color:#CFE0F2;background:rgba(79,163,255,.05);transition:border-color .2s,color .2s,transform .2s}
+.chip:hover{border-color:var(--accent);color:#fff;transform:translateY(-1px)}
+.chip.hl{border-color:rgba(79,163,255,.5);color:var(--accent2)}
 
 /* experience */
-.timeline{display:grid;gap:14px}
-.job{display:grid;grid-template-columns:180px 1fr;gap:24px;padding:22px;background:var(--panel);border:1px solid var(--line);border-radius:14px}
-.job .when{font-family:var(--mono);font-size:13px;color:var(--muted)}
-.job h3{font-size:17px}
-.job .org{color:var(--accent);font-weight:600;font-size:14.5px}
-.job p{margin:8px 0 0;color:#c3cee1;font-size:15px}
+.timeline{position:relative;padding-left:34px}
+.timeline::before{content:"";position:absolute;left:8px;top:6px;bottom:6px;width:2px;background:var(--line)}
+.tl-fill{position:absolute;left:8px;top:6px;width:2px;height:0;background:linear-gradient(var(--accent),var(--accent2));box-shadow:0 0 14px var(--glow);transition:height .2s linear}
+.job{position:relative;margin-bottom:22px}
+.job::before{content:"";position:absolute;left:-31px;top:30px;width:12px;height:12px;border-radius:50%;background:var(--bg);border:2px solid var(--accent);box-shadow:0 0 0 5px rgba(79,163,255,.12)}
+.job-head{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap;align-items:baseline}
+.job h3{font-size:24px}
+.job .org{color:var(--accent);font-weight:600;margin-top:6px}
+.job .when{font:500 13px/1 var(--mono);color:var(--muted);padding:7px 10px;border:1px solid var(--line2);border-radius:20px;white-space:nowrap}
+.job ul{margin:16px 0 0;padding-left:18px;color:#BFCCDB}
+.job li{margin-bottom:7px}
+.job li b{color:var(--text);font-weight:600}
+.job .chips{margin-top:16px}
+.job-grid{display:grid;grid-template-columns:1.35fr .65fr;gap:26px;align-items:center}
+.job-grid>*{min-width:0}
+.lat{background:rgba(6,11,19,.6);border:1px solid var(--line);border-radius:14px;padding:18px}
+.lat h5{margin:0 0 14px;font:500 12px/1.3 var(--mono);color:var(--muted);letter-spacing:.06em}
+.lat-row{margin-bottom:12px}
+.lat-row div:first-child{display:flex;justify-content:space-between;font:12.5px var(--mono);margin-bottom:6px;color:#C3D0DF}
+.lat-bar{height:10px;border-radius:6px;background:#0F1C2D;overflow:hidden}
+.lat-bar i{display:block;height:100%;width:0;border-radius:6px;transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.lat-bar.qp i{background:#46607D}.lat-bar.cf i{background:linear-gradient(90deg,var(--ok),#7FF0C1)}
+.lat .big{font:700 30px/1 var(--display);color:var(--ok);margin-top:12px}
+.lat .big span{font:400 12px var(--mono);color:var(--muted);margin-left:6px}
+
+/* featured */
+.feature{display:grid;grid-template-columns:1fr 1fr;gap:0;margin-bottom:26px;padding:0}
+.feature>*{min-width:0}
+.feature.flip .viz{order:2;border-right:0;border-left:1px solid var(--line)}
+.viz{position:relative;min-height:360px;background:radial-gradient(ellipse at 50% 30%,rgba(79,163,255,.09),transparent 70%),#08111C;border-right:1px solid var(--line);display:flex;align-items:center;justify-content:center;padding:28px;overflow:hidden}
+.f-copy{padding:36px}
+.f-copy .tag-row{display:flex;justify-content:space-between;gap:12px;align-items:center;flex-wrap:wrap}
+.pill{font:500 11.5px/1 var(--mono);padding:6px 10px;border-radius:20px;border:1px solid var(--line2);color:var(--muted)}
+.pill.live{color:var(--ok);border-color:rgba(61,220,151,.4)}
+.f-copy h3{font-size:clamp(26px,3vw,34px);margin-top:16px}
+.f-copy .sub{color:#C3D0DF;margin-top:10px}
+.f-copy ul{margin:16px 0 0;padding-left:18px;color:var(--muted);font-size:15px}
+.f-copy li{margin-bottom:6px}
+.f-copy li b{color:var(--text);font-weight:600}
+.metrics{display:flex;gap:26px;flex-wrap:wrap;margin-top:20px;padding-top:18px;border-top:1px solid var(--line)}
+.metrics div strong{display:block;font:700 26px/1 var(--display);color:var(--accent2);letter-spacing:-.02em}
+.metrics div span{font-size:12.5px;color:var(--muted)}
+.f-copy .chips{margin-top:18px}
+.links{display:flex;gap:18px;margin-top:20px;flex-wrap:wrap}
+.links a{font:500 13.5px var(--mono);color:var(--accent);display:inline-flex;align-items:center;gap:6px}
+.links a:hover{color:var(--accent2)}
+.links a::after{content:"→";transition:transform .2s}
+.links a:hover::after{transform:translateX(3px)}
+
+/* spotlight hover */
+.spot{--mx:50%;--my:50%}
+.spot::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;opacity:0;transition:opacity .3s;
+  background:radial-gradient(420px circle at var(--mx) var(--my),rgba(79,163,255,.10),transparent 45%)}
+.spot:hover::after{opacity:1}
+.spot:hover{border-color:var(--line2)}
+
+/* viz: planner */
+.planner{width:100%;max-width:400px;font-family:var(--mono)}
+.prov{display:flex;gap:8px;margin-bottom:16px}
+.prov span{flex:1;text-align:center;font-size:11.5px;padding:8px 4px;border-radius:8px;border:1px solid var(--line2);color:var(--dim);transition:all .4s}
+.prov span.on{color:#04111F;background:var(--accent);border-color:var(--accent);box-shadow:0 0 20px -4px var(--glow)}
+.sess{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;background:rgba(15,28,45,.8);margin-bottom:8px;font-size:12px;color:#C3D0DF;
+  opacity:.25;transform:translateX(-6px);transition:all .45s}
+.sess.in{opacity:1;transform:none}
+.sess b{color:var(--accent2);font-weight:500;width:34px}
+.sess em{margin-left:auto;font-style:normal;color:var(--muted)}
+.sess .ck{width:16px;height:16px;border-radius:50%;border:1.5px solid var(--line2);display:grid;place-items:center;font-size:10px;color:transparent;transition:all .3s}
+.sess.ok .ck{background:var(--ok);border-color:var(--ok);color:#04111F}
+.sess.fix{border-color:rgba(255,181,71,.5)}
+.sess.fix em{color:var(--warn)}
+.repair{margin-top:12px;font-size:11.5px;color:var(--dim);display:flex;justify-content:space-between}
+.repair span:last-child{color:var(--ok)}
+
+/* viz: shadow slider */
+.ba{position:relative;width:100%;max-width:460px;aspect-ratio:461/290;border-radius:12px;overflow:hidden;border:1px solid var(--line2);cursor:ew-resize;user-select:none;touch-action:pan-y}
+.ba img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;pointer-events:none}
+.ba .after{clip-path:inset(0 0 0 var(--cut,50%))}
+.ba .handle{position:absolute;top:0;bottom:0;left:var(--cut,50%);width:2px;background:#fff;box-shadow:0 0 12px rgba(0,0,0,.5);transform:translateX(-1px)}
+.ba .handle::after{content:"⟷";position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);width:34px;height:34px;border-radius:50%;background:#fff;color:#0A1422;display:grid;place-items:center;font-size:15px;font-weight:700}
+.ba .lb{position:absolute;top:10px;font:500 11px/1 var(--mono);padding:6px 8px;border-radius:5px;background:rgba(6,11,19,.75);color:#fff;letter-spacing:.06em}
+.ba .lb.l{left:10px}.ba .lb.r{right:10px}
+.ba input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:ew-resize;margin:0}
+.viz-col{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%}
+.psnr{width:100%;max-width:460px;display:grid;gap:8px}
+.psnr div{display:grid;grid-template-columns:120px 1fr 52px;gap:10px;align-items:center;font:12px var(--mono);color:var(--muted)}
+.psnr .bar{height:8px;border-radius:5px;background:#0F1C2D;overflow:hidden}
+.psnr .bar i{display:block;height:100%;width:0;border-radius:5px;background:#46607D;transition:width 1.3s cubic-bezier(.2,.8,.2,1)}
+.psnr .best i{background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.psnr .best{color:var(--text)}
+
+/* viz: rag */
+.rag{width:100%;max-width:440px}
+.rag svg{width:100%;height:auto;display:block}
+.rag .node rect{fill:#0F1C2D;stroke:#25384F}
+.rag .node text{fill:#C3D0DF;font:11px var(--mono)}
+.rag .node.hl rect{stroke:var(--accent)}
+.rag .edge{stroke:#25384F;stroke-width:1.5;fill:none}
+.rag .flow{stroke:var(--accent);stroke-width:2;fill:none;stroke-dasharray:6 10;animation:dash 1.2s linear infinite}
+.rag .cite{fill:var(--accent2);font:600 11px var(--mono)}
+
+/* viz: detection */
+.det{position:relative;width:100%;max-width:440px;aspect-ratio:4/3;border-radius:12px;overflow:hidden;border:1px solid var(--line2);
+  background:radial-gradient(circle at 20% 80%,#3B4A2E 0 8%,transparent 9%),radial-gradient(circle at 75% 70%,#3B4A2E 0 10%,transparent 11%),linear-gradient(160deg,#4C5E38,#33432A)}
+.obj{position:absolute;border-radius:6px}
+.box{position:absolute;border:2px solid var(--ok);border-radius:3px;opacity:0;transform:scale(1.15);transition:all .35s}
+.box.on{opacity:1;transform:none}
+.box b{position:absolute;left:-2px;top:-21px;font:600 11px/1 var(--mono);background:var(--ok);color:#04111F;padding:4px 6px;border-radius:3px;white-space:nowrap}
+.score{position:absolute;right:12px;top:12px;background:rgba(6,11,19,.85);border:1px solid var(--line2);border-radius:10px;padding:9px 12px;font-family:var(--mono)}
+.score small{display:block;font-size:10px;color:var(--muted);letter-spacing:.08em}
+.score strong{font:700 22px/1.1 var(--display)}
+.heat{position:absolute;inset:0;background:radial-gradient(circle at 28% 38%,rgba(255,107,107,.45),transparent 20%),radial-gradient(circle at 64% 58%,rgba(255,181,71,.4),transparent 18%);opacity:0;transition:opacity .8s;mix-blend-mode:screen}
+.heat.on{opacity:1}
+
+/* projects grid */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.filters button{font:500 13px/1 var(--mono);padding:10px 14px;border-radius:30px;border:1px solid var(--line2);background:transparent;color:var(--muted);cursor:pointer;transition:all .2s}
+.filters button:hover{color:var(--text);border-color:var(--accent)}
+.filters button[aria-pressed="true"]{background:var(--accent);border-color:var(--accent);color:#04111F}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.grid>*{min-width:0}
+.pcard{display:flex;flex-direction:column;padding:24px;transition:transform .3s,border-color .3s,opacity .3s}
+.pcard:hover{transform:translateY(-4px)}
+.pcard.hide{display:none}
+.pcard .ico{width:44px;height:44px;border-radius:11px;display:grid;place-items:center;background:rgba(79,163,255,.1);border:1px solid rgba(79,163,255,.25);margin-bottom:16px}
+.pcard .ico svg{width:22px;height:22px;stroke:var(--accent2);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+.pcard .cat{font:500 11px/1 var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.pcard h3{font-size:21px;margin-top:8px}
+.pcard p{color:var(--muted);font-size:14.5px;margin-top:10px}
+.pcard .kpi{margin-top:14px;font:600 13px var(--mono);color:var(--ok)}
+.pcard .chips{margin-top:14px}
+.pcard .chip{font-size:11.5px;padding:6px 8px}
+.pcard .foot{margin-top:auto;padding-top:16px;display:flex;justify-content:space-between;gap:10px;font:500 12.5px var(--mono);color:var(--dim)}
+.pcard .foot a{color:var(--accent)}
+.pcard .foot a:hover{color:var(--accent2)}
+.pcard-body{flex:1;display:flex;flex-direction:column}
+
+/* publication */
+.pub{display:grid;grid-template-columns:auto 1fr auto;gap:28px;align-items:center}
+.pub .badge{width:76px;height:76px;border-radius:18px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(79,163,255,.2),rgba(139,198,255,.05));border:1px solid rgba(79,163,255,.35)}
+.pub .badge svg{width:34px;height:34px;stroke:var(--accent2);fill:none;stroke-width:1.6}
+.pub h3{font-size:clamp(20px,2.4vw,26px);line-height:1.25}
+.pub p{color:var(--muted);margin-top:8px}
 
 /* contact */
-.contact{border-top:1px solid var(--line)}
-.contact .panel{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:20px}
-.email{font-family:var(--mono);font-size:16px;user-select:all}
-.copy{cursor:pointer;font:inherit}
-footer{padding-block:28px;color:var(--muted);font-size:13px;text-align:center}
+.contact{text-align:center;padding-block:110px 90px}
+.contact h2{font-size:clamp(40px,7vw,84px);font-weight:800;letter-spacing:-.04em}
+.contact h2 span{background:linear-gradient(100deg,var(--accent),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+.contact p{color:var(--muted);margin:18px auto 0;max-width:52ch;font-size:17px}
+.mail{display:inline-flex;align-items:center;gap:12px;margin-top:30px;padding:10px 10px 10px 20px;border:1px solid var(--line2);border-radius:14px;background:rgba(12,22,36,.7);flex-wrap:wrap;justify-content:center}
+.mail code{font:500 clamp(16px,2.4vw,22px) var(--mono);color:var(--text);user-select:all}
+.contact .hero-actions{justify-content:center}
+footer{border-top:1px solid var(--line);padding-block:26px;color:var(--dim);font-size:13px}
+footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 
-@media (max-width:900px){
-  .hero .wrap,.about,.research{grid-template-columns:1fr}
-  .more{grid-template-columns:1fr 1fr}
-  .facts{grid-template-columns:1fr}
+/* reveal: visible by default, only below-the-fold items are hidden by JS before they scroll in */
+.reveal.pre{opacity:0;transform:translateY(26px)}
+.reveal{transition:opacity .8s cubic-bezier(.2,.8,.2,1),transform .8s cubic-bezier(.2,.8,.2,1)}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ping{0%{transform:scale(1);opacity:.8}100%{transform:scale(2.2);opacity:0}}
+@keyframes blink{50%{opacity:0}}
+@keyframes scroll{to{transform:translateX(-50%)}}
+@keyframes dash{to{stroke-dashoffset:-32}}
+@keyframes float{50%{transform:translateY(-6px)}}
+
+@media (max-width:980px){
+  .hero{grid-template-columns:1fr;gap:40px;padding-top:48px}
+  .term{transform:none}
+  .about,.job-grid{grid-template-columns:1fr}
+  .feature{grid-template-columns:1fr}
+  .feature .viz,.feature.flip .viz{order:0;border:0;border-bottom:1px solid var(--line);min-height:300px}
+  .grid{grid-template-columns:1fr 1fr}
+  .nav-links{display:none}
 }
 @media (max-width:640px){
-  .avatar{width:112px;height:112px}
-  .navlinks{display:none}
-  .grid,.more{grid-template-columns:1fr}
-  .job{grid-template-columns:1fr;gap:6px}
-  section{padding-block:52px}
-  .hero .wrap{padding-block:48px}
+  .stats{grid-template-columns:1fr 1fr}
+  .grid{grid-template-columns:1fr}
+  .f-copy,.card{padding:22px}
+  .viz{padding:18px}
+  .pub{grid-template-columns:1fr;text-align:left}
+  .psnr div{grid-template-columns:96px 1fr 46px}
+  .edu-row{flex-direction:column;gap:2px}
+  .nav-cta .label{display:none}
+  .timeline{padding-left:26px}
+  .job::before{left:-23px}
+  .term-body{font-size:12px;min-height:270px}
 }
-@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+  html{scroll-behavior:auto}
+  .reveal.pre{opacity:1;transform:none}
+  #net{display:none}
+}
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="wrap">
-    <a class="logo" href="#top">ODRA <span>BIRA</span></a>
-    <div class="navlinks">
-      <a href="#about">About</a><a href="#projects">Projects</a><a href="#experience">Experience</a><a href="#contact">Contact</a><a href="Odra_Bira_Resume.pdf" target="_blank" rel="noopener">Resume</a>
-    </div>
-  </div>
-</nav>
 
-<header class="hero" id="top">
-  <div class="wrap">
-    <div class="intro">
-      <img class="avatar" src="data:image/jpeg;base64,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" alt="Portrait of Odra Bira" width="140" height="140">
-      <h1>ODRA <span>BIRA</span></h1>
-      <div class="sub">M.S. Computer Science @ University at Buffalo</div>
-      <p class="lead">I build LLM applications, computer vision systems and the software around them, from FastAPI back ends to trained models with measured results.</p>
-      <div class="btns">
-        <a class="btn" href="https://github.com/odra-bira" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.3 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>GitHub</a>
-        <a class="btn primary" href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21h-4V9Z"/></svg>LinkedIn</a>
-        <a class="btn" href="#projects"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 5h8v6H3V5Zm10 0h8v6h-8V5ZM3 13h8v6H3v-6Zm10 0h8v6h-8v-6Z"/></svg>Projects</a>
-        <a class="btn" href="Odra_Bira_Resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v14H6V2Zm8 1.5V9h5.5M9 13h8M9 17h8"/></svg>Resume</a>
-      </div>
-    </div>
-    <div class="stats" aria-label="Highlights">
-      <div class="stat"><b>3.83</b><span>Graduate GPA, M.S. Computer Science</span></div>
-      <div class="stat"><b>7</b><span>AI/ML projects, from LLM apps to computer vision</span></div>
-      <div class="stat"><b>2</b><span>Industry roles in full-stack and software development</span></div>
-      <div class="stat"><b>1</b><span>Peer-reviewed publication (IJRASET, 2025)</span></div>
-    </div>
+<canvas id="net" aria-hidden="true"></canvas>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="glow-orb" aria-hidden="true"></div>
+
+<header class="nav">
+  <div class="wrap nav-in">
+    <a class="logo" href="#top" aria-label="Odra Bira, home"><span class="logo-mark">OB</span>Odra <i>Bira</i></a>
+    <nav class="nav-links" aria-label="Sections">
+      <a href="#about">About</a><a href="#experience">Experience</a><a href="#work">Work</a><a href="#projects">Projects</a><a href="#publication">Publication</a><a href="#contact">Contact</a>
+    </nav>
+    <a class="btn sm primary nav-cta" href="Odra_Bira_Resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 3v12m0 0-5-5m5 5 5-5M5 21h14" stroke="currentColor" stroke-width="2.2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg><span class="label">Resume</span></a>
   </div>
+  <div class="progress" id="progress"></div>
 </header>
 
-<section id="about">
-  <div class="wrap">
+<main id="top">
+<div class="wrap">
+  <div class="hero">
+    <div>
+      <div class="avatar-wrap"><div class="avatar-ring"></div><img src="assets/avatar.jpg" alt="Odra Bira" width="116" height="116"><span class="status-dot" title="Open to roles"></span></div>
+      <div class="eyebrow">M.S. Computer Science · University at Buffalo</div>
+      <h1>Odra <span>Bira</span></h1>
+      <div class="typed" aria-live="polite">I build <b id="typed">LLM applications</b><span class="caret" aria-hidden="true"></span></div>
+      <p class="lede">AI/ML engineer working across the stack: diffusion-model research on GPU servers, provider-agnostic LLM services, hybrid-retrieval RAG and computer vision, plus two industry roles shipping React, Node.js and SQL.</p>
+      <div class="hero-actions">
+        <a class="btn primary" href="#work">See my work</a>
+        <a class="btn" href="https://github.com/odra-bira" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .5a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1.1-.7.1-.7.1-.7 1.2.1 1.9 1.3 1.9 1.3 1.1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.8-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.3.5-2.4 1.3-3.2-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.3 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.3 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.8 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .5Z"/></svg>GitHub</a>
+        <a class="btn" href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5ZM3 9h4v12H3V9Zm7 0h3.8v1.7h.1c.5-1 1.8-2 3.8-2 4 0 4.8 2.6 4.8 6V21h-4v-5.6c0-1.3 0-3-1.9-3s-2.1 1.4-2.1 2.9V21h-4V9Z"/></svg>LinkedIn</a>
+        <a class="btn" href="Odra_Bira_Resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v14H6V2Zm8 0v6h6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg>Resume</a>
+      </div>
+    </div>
+    <div class="term spot" aria-label="Profile summary">
+      <div class="term-bar"><i></i><i></i><i></i><span>~/odra — zsh</span></div>
+      <div class="term-body" id="term">
+        <div class="term-line"><span class="p">❯</span> whoami</div>
+        <div class="term-line">odra-bira <span class="c"># AI/ML engineer, Buffalo NY</span></div>
+        <div class="term-line"><span class="p">❯</span> cat focus.yml</div>
+        <div class="term-line"><span class="k">research</span>: <span class="s">safe planning with diffusion models</span></div>
+        <div class="term-line"><span class="k">building</span>: <span class="s">LLM apps · RAG · computer vision</span></div>
+        <div class="term-line"><span class="k">stack</span>: [<span class="s">python</span>, <span class="s">pytorch</span>, <span class="s">fastapi</span>, <span class="s">react</span>]</div>
+        <div class="term-line"><span class="k">gpa</span>: <span class="n">3.83</span></div>
+        <div class="term-line"><span class="p">❯</span> ./status --hiring</div>
+        <div class="term-line"><span style="color:var(--ok)">●</span> open to AI/ML engineer roles</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat spot"><strong class="tnum"><span data-count="3.83" data-dec="2">3.83</span></strong><span>Graduate GPA, M.S. Computer Science</span></div>
+    <div class="stat spot"><strong class="tnum"><span data-count="3">3</span></strong><span>Engineering roles: research and industry</span></div>
+    <div class="stat spot"><strong class="tnum"><span data-count="12">12</span><em>+</em></strong><span>AI/ML projects, from LLMs to vision</span></div>
+    <div class="stat spot"><strong class="tnum"><span data-count="1">1</span></strong><span>Peer-reviewed publication (IJRASET 2025)</span></div>
+  </div>
+</div>
+
+<div class="marquee" aria-label="Technologies">
+  <div class="track" id="track">
+    <span>Python</span><span>PyTorch</span><span>Claude &amp; Gemini APIs</span><span>RAG</span><span>FastAPI</span><span>Diffusion models</span><span>Hugging Face</span><span>LoRA / QLoRA</span><span>Ollama</span><span>React</span><span>YOLOv8</span><span>OpenCV</span><span>Java</span><span>SQL</span><span>C/C++</span><span>Docker</span><span>CUDA</span><span>TensorFlow</span><span>scikit-learn</span><span>Gymnasium</span>
+  </div>
+</div>
+
+<div class="wrap">
+  <!-- ABOUT -->
+  <section id="about">
+    <div class="sec-head reveal"><div><div class="eyebrow">01 · About</div><h2>Models that work outside the notebook.</h2></div></div>
     <div class="about">
-      <div class="panel">
-        <div class="sec-head" style="margin-bottom:18px"><h2>About Me</h2></div>
-        <p>I'm a Master's student in Computer Science at the University at Buffalo (AI/ML focus, 3.83 GPA). I like problems where a model has to become something people can use: a planner that runs on any LLM provider, a shadow-removal model behind a web app, a detector that turns photos into a cleanliness score.</p>
-        <p>In graduate research I work on safe planning with generative models, training and evaluating models on GPU servers. Before that I built REST services and tuned SQL performance in two industry roles.</p>
-        <div class="facts">
-          <div class="fact"><b>Focus areas</b><span>LLM apps &amp; RAG, computer vision, machine learning, software engineering</span></div>
-          <div class="fact"><b>Education</b><span>M.S. CS, University at Buffalo · B.Tech. CS (AI &amp; ML), KMIT</span></div>
-          <div class="fact"><b>Published</b><span>Fruit quality assessment with MobileNetV2 (IJRASET, 2025)</span></div>
+      <div class="card spot about-text reveal">
+        <p>I'm a Master's student in Computer Science at the <strong>University at Buffalo</strong> (AI/ML focus, <strong>3.83 GPA</strong>) and a Graduate Student Researcher working on <strong>safe planning with diffusion and flow-matching models</strong>.</p>
+        <p>I like taking a model all the way to something people use: a study planner that runs on any LLM provider, a shadow-removal network behind a web app, a detector that turns photos into a cleanliness score. Every project gets a baseline, a held-out test and an honest error analysis.</p>
+        <p>Before grad school I shipped React, Node.js and SQL features in two industry roles, where I cut API latency 20% and page-load time 30%.</p>
+        <div class="edu">
+          <div class="edu-row"><div><h4>University at Buffalo, SUNY</h4><p>M.S. Computer Science (AI/ML) · GPA 3.83/4.00</p></div><span class="mono">Aug 2025 – Dec 2026</span></div>
+          <div class="edu-row"><div><h4>Keshav Memorial Institute of Technology</h4><p>B.Tech. Computer Science (AI &amp; ML) · GPA 8.4/10</p></div><span class="mono">2021 – 2025</span></div>
         </div>
       </div>
-      <div class="panel">
-        <h3>Tech Stack</h3>
-        <div class="stack-group"><div class="eyebrow">Languages</div><div class="chips"><span class="chip">Python</span><span class="chip">JavaScript</span><span class="chip">SQL</span><span class="chip">Java</span><span class="chip">C/C++</span><span class="chip">Bash</span></div></div>
-        <div class="stack-group"><div class="eyebrow">LLMs &amp; generative AI</div><div class="chips"><span class="chip">Claude API</span><span class="chip">Gemini API</span><span class="chip">Ollama</span><span class="chip">RAG</span><span class="chip">BM25 + vector search</span><span class="chip">Reranking</span><span class="chip">Diffusion models</span></div></div>
-        <div class="stack-group"><div class="eyebrow">Machine learning &amp; CV</div><div class="chips"><span class="chip">PyTorch</span><span class="chip">TensorFlow/Keras</span><span class="chip">YOLOv8</span><span class="chip">OpenCV</span><span class="chip">MediaPipe</span><span class="chip">scikit-learn</span><span class="chip">NumPy</span><span class="chip">Pandas</span></div></div>
-        <div class="stack-group"><div class="eyebrow">Development &amp; tools</div><div class="chips"><span class="chip">FastAPI</span><span class="chip">Pydantic</span><span class="chip">React</span><span class="chip">Flask</span><span class="chip">Gradio</span><span class="chip">Docker</span><span class="chip">Git</span><span class="chip">Linux &amp; GPU servers</span><span class="chip">pytest</span></div></div>
+      <div class="card spot reveal">
+        <div class="skill-group"><h4>Languages</h4><div class="chips"><span class="chip hl">Python</span><span class="chip hl">Java</span><span class="chip hl">SQL</span><span class="chip hl">C/C++</span></div></div>
+        <div class="skill-group"><h4>Generative AI &amp; LLMs</h4><div class="chips"><span class="chip">Claude &amp; Gemini APIs</span><span class="chip">Ollama</span><span class="chip">vLLM</span><span class="chip">RAG</span><span class="chip">BM25 + vector search</span><span class="chip">Reranking</span><span class="chip">LoRA / QLoRA</span><span class="chip">Diffusion models</span></div></div>
+        <div class="skill-group"><h4>Machine Learning &amp; Vision</h4><div class="chips"><span class="chip">PyTorch</span><span class="chip">TensorFlow / Keras</span><span class="chip">scikit-learn</span><span class="chip">Transformers</span><span class="chip">U-Net</span><span class="chip">YOLOv8</span><span class="chip">OpenCV</span><span class="chip">MediaPipe</span></div></div>
+        <div class="skill-group"><h4>Backend &amp; Tools</h4><div class="chips"><span class="chip">FastAPI</span><span class="chip">Pydantic</span><span class="chip">React</span><span class="chip">Node.js</span><span class="chip">PostgreSQL</span><span class="chip">Docker</span><span class="chip">Git</span><span class="chip">Linux / GPU servers</span><span class="chip">pytest</span></div></div>
       </div>
     </div>
-  </div>
-</section>
+  </section>
 
-<section id="projects" style="padding-top:0">
+  <!-- EXPERIENCE -->
+  <section id="experience">
+    <div class="sec-head reveal"><div><div class="eyebrow">02 · Experience</div><h2>Research and industry.</h2></div><p>From diffusion planners on an RTX 5090 to production React and SQL.</p></div>
+    <div class="timeline" id="timeline">
+      <div class="tl-fill" id="tlfill"></div>
+      <article class="job card spot reveal">
+        <div class="job-grid">
+          <div>
+            <div class="job-head"><div><h3>Graduate Student Researcher</h3><div class="org">University at Buffalo</div></div><span class="when">Oct 2025 – Present</span></div>
+            <ul>
+              <li>Reproduce and benchmark safety-constrained generative planners (<b>SafeDiffuser, ICLR 2025</b>) as baselines for lab research on safe planning.</li>
+              <li>Trained a <b>temporal U-Net diffusion trajectory planner</b> (600-step horizon, 1M iterations) and a value function for guided sampling on D4RL Walker2d, on an <b>NVIDIA RTX 5090</b> server.</li>
+              <li>Benchmarked QP-based vs. closed-form <b>control barrier function</b> enforcement over 100 episodes each: same safety, <b>3.2× lower planning latency</b>.</li>
+              <li>Made the research codebase reproducible on Python 3.10.</li>
+            </ul>
+            <div class="chips"><span class="chip">Diffusion models</span><span class="chip">PyTorch</span><span class="chip">D4RL</span><span class="chip">CUDA</span><span class="chip">Safe RL</span></div>
+          </div>
+          <div class="lat" id="lat">
+            <h5>PLANNING LATENCY · 100 EPISODES</h5>
+            <div class="lat-row"><div><span>QP-based CBF</span><span>0.64 s</span></div><div class="lat-bar qp"><i data-w="100"></i></div></div>
+            <div class="lat-row"><div><span>Closed-form CBF</span><span>0.20 s</span></div><div class="lat-bar cf"><i data-w="31"></i></div></div>
+            <div class="big">3.2×<span>faster, same safety</span></div>
+          </div>
+        </div>
+      </article>
+      <article class="job card spot reveal">
+        <div class="job-head"><div><h3>Full Stack Developer</h3><div class="org">Accentiqa Systems Pvt. Ltd.</div></div><span class="when">Jun 2025 – Aug 2025</span></div>
+        <ul>
+          <li>Delivered full-stack features for enterprise workflow apps, owning both the React front end and the RESTful back-end services.</li>
+          <li>Designed relational database schemas and built end-to-end CRUD flows across UI, API and data layers, with validated React forms.</li>
+        </ul>
+        <div class="chips"><span class="chip">React</span><span class="chip">REST APIs</span><span class="chip">SQL</span><span class="chip">Schema design</span></div>
+      </article>
+      <article class="job card spot reveal">
+        <div class="job-head"><div><h3>Software Developer Intern</h3><div class="org">Risposta Software India Pvt. Ltd.</div></div><span class="when">May 2024 – Aug 2024</span></div>
+        <ul>
+          <li>Cut API data latency <b>20%</b> by profiling and rewriting the slow SQL queries behind REST endpoints.</li>
+          <li>Cut page-load time <b>30%</b> by reworking how React/Node.js features fetched and rendered data.</li>
+        </ul>
+        <div class="chips"><span class="chip">Node.js</span><span class="chip">React</span><span class="chip">SQL</span><span class="chip">Performance</span></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- FEATURED -->
+  <section id="work">
+    <div class="sec-head reveal"><div><div class="eyebrow">03 · Featured work</div><h2>Built, measured, shipped.</h2></div><p>Four projects taken from model to working app, each with an evaluation behind it.</p></div>
+
+    <article class="feature card spot reveal">
+      <div class="viz">
+        <div class="planner" id="planner" aria-label="Animation: StudyEase switches LLM providers and validates a study plan">
+          <div class="prov"><span data-p="0">Claude</span><span data-p="1">Gemini</span><span data-p="2">Ollama</span></div>
+          <div class="sess"><b>Mon</b>Outline essay<em>45 min</em><span class="ck">✓</span></div>
+          <div class="sess"><b>Tue</b>DL problem set<em>90 min</em><span class="ck">✓</span></div>
+          <div class="sess" data-fix="1"><b>Wed</b>Read chapter 6<em>240 → 180 min</em><span class="ck">✓</span></div>
+          <div class="sess"><b>Thu</b>Review &amp; submit<em>30 min</em><span class="ck">✓</span></div>
+          <div class="repair"><span>validate → repair</span><span id="repairMsg">plan within 15–180 min ✓</span></div>
+        </div>
+      </div>
+      <div class="f-copy">
+        <div class="tag-row"><span class="eyebrow">LLM application</span><span class="pill live">35 tests passing</span></div>
+        <h3>StudyEase: LLM-Powered Study Planner</h3>
+        <p class="sub">Turns assignments, deadlines and free time into a weekly plan, on any LLM provider.</p>
+        <ul>
+          <li>React/Vite + async FastAPI with <b>5 typed REST endpoints</b>: plan, rebalance, breakdown, chat, health.</li>
+          <li><b>Provider-agnostic LLM layer</b> (adapter pattern) over Claude, Gemini and local Ollama, switched by config.</li>
+          <li>Deterministic <b>validate-and-repair engine</b> enforces date windows, daily capacity and 15–180 min sessions on every LLM plan, with rule-based fallback.</li>
+        </ul>
+        <div class="chips"><span class="chip">FastAPI</span><span class="chip">React</span><span class="chip">Pydantic</span><span class="chip">Claude / Gemini</span><span class="chip">Ollama</span><span class="chip">pytest</span></div>
+        <div class="links"><a href="https://github.com/odra-bira/Studyplanner" target="_blank" rel="noopener">Code</a></div>
+      </div>
+    </article>
+
+    <article class="feature flip card spot reveal">
+      <div class="viz">
+        <div class="viz-col">
+          <div class="ba" id="ba" style="--cut:50%">
+            <img src="assets/shadow-before.jpg" alt="Photo of pavement with a large cast shadow" width="461" height="290">
+            <img class="after" src="assets/shadow-after.jpg" alt="Same photo after ShadowFix removed the shadow" width="461" height="290">
+            <span class="lb l">INPUT</span><span class="lb r">RESTORED</span>
+            <div class="handle"></div>
+            <input type="range" id="baRange" min="0" max="100" value="50" aria-label="Compare input and restored image">
+          </div>
+          <div class="psnr" id="psnr">
+            <div><span>Shadow input</span><span class="bar"><i data-w="68"></i></span><span>20.56</span></div>
+            <div><span>RGB U-Net</span><span class="bar"><i data-w="90"></i></span><span>27.18</span></div>
+            <div class="best"><span>Mask-guided</span><span class="bar"><i data-w="100"></i></span><span>30.19</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="f-copy">
+        <div class="tag-row"><span class="eyebrow">Computer vision · Capstone</span><span class="pill">Drag the image</span></div>
+        <h3>ShadowFix: Deep-Learning Shadow Removal</h3>
+        <p class="sub">Restores what's hidden under real-world shadows, deployed as a Gradio app.</p>
+        <ul>
+          <li>Trained 3 U-Net variants (RGB, residual, mask-guided; ~7.8M params) on ISTD with mixed precision on an NVIDIA T4.</li>
+          <li>Split PSNR by region to show residual models <b>over-correct non-shadow pixels</b> (−1.3 dB), which a single score hides.</li>
+          <li>Gradio app with automatic (OpenCV LAB-space mask) and paint-guided restoration.</li>
+        </ul>
+        <div class="metrics"><div><strong>30.19 dB</strong><span>PSNR, 540 test images</span></div><div><strong>+9.6 dB</strong><span>over the raw input</span></div><div><strong>0.951</strong><span>SSIM</span></div></div>
+        <div class="links"><a href="https://github.com/odra-bira/ShadowFix" target="_blank" rel="noopener">Code &amp; results</a></div>
+      </div>
+    </article>
+
+    <article class="feature card spot reveal">
+      <div class="viz">
+        <div class="rag" aria-label="Diagram: query flows through BM25 and dense retrieval, a cross-encoder reranker, then a cited LLM answer">
+          <svg viewBox="0 0 440 300">
+            <path class="edge" d="M70 150 C105 150 105 80 140 80"/><path class="edge" d="M70 150 C105 150 105 220 140 220"/>
+            <path class="edge" d="M260 80 C285 80 280 150 300 150"/><path class="edge" d="M260 220 C285 220 280 150 300 150"/>
+            <path class="flow" d="M70 150 C105 150 105 80 140 80"/><path class="flow" d="M70 150 C105 150 105 220 140 220" style="animation-delay:-.6s"/>
+            <path class="flow" d="M260 80 C285 80 280 150 300 150" style="animation-delay:-.3s"/><path class="flow" d="M260 220 C285 220 280 150 300 150" style="animation-delay:-.9s"/>
+            <g class="node hl"><rect x="6" y="128" width="64" height="44" rx="9"/><text x="38" y="155" text-anchor="middle">query</text></g>
+            <g class="node"><rect x="140" y="58" width="120" height="44" rx="9"/><text x="200" y="85" text-anchor="middle">BM25 sparse</text></g>
+            <g class="node"><rect x="140" y="198" width="120" height="44" rx="9"/><text x="200" y="225" text-anchor="middle">dense vectors</text></g>
+            <g class="node hl"><rect x="300" y="122" width="132" height="56" rx="9"/><text x="366" y="146" text-anchor="middle">cross-encoder</text><text x="366" y="163" text-anchor="middle">rerank → LLM</text></g>
+            <g><rect x="300" y="200" width="132" height="64" rx="9" fill="#0B1726" stroke="#3DDC97" stroke-opacity=".5"/>
+              <rect x="312" y="214" width="96" height="6" rx="3" fill="#25384F"/><rect x="312" y="228" width="108" height="6" rx="3" fill="#25384F"/><rect x="312" y="242" width="70" height="6" rx="3" fill="#25384F"/>
+              <text class="cite" x="388" y="250">[1][2]</text></g>
+            <text x="200" y="285" text-anchor="middle" fill="#5D7189" style="font:11px 'JetBrains Mono',monospace">1,000-question eval benchmark</text>
+          </svg>
+        </div>
+      </div>
+      <div class="f-copy">
+        <div class="tag-row"><span class="eyebrow">RAG · LLM</span><span class="pill">Benchmarked</span></div>
+        <h3>SkinGPT: RAG Knowledge Assistant</h3>
+        <p class="sub">Citation-grounded answers over unstructured documents.</p>
+        <ul>
+          <li>Multi-stage pipeline: ingestion → chunking → embedding index → <b>hybrid BM25 + dense retrieval</b> → <b>cross-encoder reranking</b>.</li>
+          <li>Generates answers that cite their source passages.</li>
+          <li>Built a <b>1,000-question evaluation benchmark</b> to measure retrieval and drive tuning.</li>
+        </ul>
+        <div class="metrics"><div><strong>~75%</strong><span>retrieval precision</span></div><div><strong>1,000</strong><span>eval questions</span></div></div>
+        <div class="chips"><span class="chip">Embeddings</span><span class="chip">Vector search</span><span class="chip">BM25</span><span class="chip">Cross-encoder</span><span class="chip">LLM APIs</span></div>
+      </div>
+    </article>
+
+    <article class="feature flip card spot reveal">
+      <div class="viz">
+        <div class="det" id="det" aria-label="Animation: YOLOv8 boxes appear around litter and a cleanliness score updates">
+          <div class="obj" style="left:18%;top:30%;width:70px;height:44px;background:#C9D1DA;transform:rotate(-12deg)"></div>
+          <div class="obj" style="left:58%;top:50%;width:34px;height:62px;background:#A9B6C4;border-radius:10px"></div>
+          <div class="obj" style="left:40%;top:72%;width:46px;height:20px;background:#D9C7A0;transform:rotate(8deg)"></div>
+          <div class="heat" id="heat"></div>
+          <div class="box" style="left:15%;top:24%;width:92px;height:66px"><b>plastic 0.82</b></div>
+          <div class="box" style="left:55.5%;top:46%;width:48px;height:80px"><b>bottle 0.77</b></div>
+          <div class="box" style="left:37.5%;top:67%;width:66px;height:38px"><b>paper 0.71</b></div>
+          <div class="score"><small>CLEANLINESS</small><strong><span id="clean">100</span>/100</strong></div>
+        </div>
+      </div>
+      <div class="f-copy">
+        <div class="tag-row"><span class="eyebrow">Object detection</span><span class="pill">CLI + Gradio</span></div>
+        <h3>Trash Detection &amp; Cleanliness Scoring</h3>
+        <p class="sub">Turns raw detections into a number a city crew could act on.</p>
+        <ul>
+          <li>Fine-tuned <b>YOLOv8n</b> on the TACO litter dataset (30 epochs, 640 px) via transfer learning.</li>
+          <li>Confidence- and area-weighted <b>0–100 cleanliness score</b> plus Gaussian density heatmaps.</li>
+          <li>Error analysis traced the recall gap to small objects; scoring logic covered by pytest.</li>
+        </ul>
+        <div class="metrics"><div><strong>0.78</strong><span>precision</span></div><div><strong>0–100</strong><span>cleanliness score</span></div></div>
+        <div class="chips"><span class="chip">YOLOv8</span><span class="chip">OpenCV</span><span class="chip">Gradio</span><span class="chip">pytest</span></div>
+        <div class="links"><a href="https://github.com/odra-bira/trash_detection" target="_blank" rel="noopener">Code</a></div>
+      </div>
+    </article>
+  </section>
+
+  <!-- MORE PROJECTS -->
+  <section id="projects">
+    <div class="sec-head reveal"><div><div class="eyebrow">04 · More projects</div><h2>From first principles to deployed demos.</h2></div><p>Coursework at UB and personal builds: Transformers from scratch, LLM fine-tuning, reinforcement learning and statistical learning.</p></div>
+    <div class="filters reveal" role="group" aria-label="Filter projects">
+      <button type="button" data-f="all" aria-pressed="true">All</button>
+      <button type="button" data-f="llm" aria-pressed="false">LLMs &amp; NLP</button>
+      <button type="button" data-f="cv" aria-pressed="false">Computer vision</button>
+      <button type="button" data-f="dl" aria-pressed="false">Deep learning</button>
+      <button type="button" data-f="ml" aria-pressed="false">ML &amp; RL</button>
+    </div>
+    <div class="grid" id="grid">
+      <article class="pcard card spot reveal" data-cat="llm dl">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2V3Z"/><path d="M9 8h6M9 12h6M9 16h3"/></svg></div>
+        <div class="pcard-body"><span class="cat">LLM fine-tuning</span><h3>Receipt-to-JSON with QLoRA</h3>
+        <p>Fine-tuned Qwen2.5-3B-Instruct with 4-bit QLoRA (rank 16, ~1% of weights trained) on CORD-v2 receipts to output schema-valid JSON, on one 16 GB T4.</p>
+        <p>Eval harness: JSON validity, field accuracy and item-level F1; Tesseract + Gradio demo.</p>
+        <div class="chips"><span class="chip">Qwen2.5</span><span class="chip">Unsloth</span><span class="chip">TRL</span><span class="chip">PEFT</span></div>
+        <div class="foot"><span>Personal project</span></div></div>
+      </article>
+      <article class="pcard card spot reveal" data-cat="dl llm cv">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M14 17.5h7M17.5 14v7"/></svg></div>
+        <div class="pcard-body"><span class="cat">Deep learning · CSE 676</span><h3>Transformers from Scratch: ViT + GPT</h3>
+        <p>Built a Vision Transformer and a character-level GPT in PyTorch, then ran a 7-config ablation over patch size, depth and positional encoding on CIFAR-10.</p>
+        <div class="kpi">patch 8 → 2: 40.7% → 50.3% acc · GPT val loss 3.19 → 2.73</div>
+        <div class="chips"><span class="chip">PyTorch</span><span class="chip">Self-attention</span><span class="chip">Ablations</span></div>
+        <div class="foot"><span>Course project</span></div></div>
+      </article>
+      <article class="pcard card spot reveal" data-cat="ml">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/><circle cx="6" cy="6" r="1.2"/><path d="M17 17l1.5 1.5"/></svg></div>
+        <div class="pcard-body"><span class="cat">Reinforcement learning · CSE 574</span><h3>RL Agents in Custom Gymnasium Worlds</h3>
+        <p>Designed a 25-state treasure-hunt world with 7 reward types and a 6×6 warehouse robot, solved with SARSA and n-step Double Q-learning (n = 1–5).</p>
+        <div class="kpi">tuning cut reward variance 35% · warehouse −10 → 110</div>
+        <div class="chips"><span class="chip">Gymnasium</span><span class="chip">SARSA</span><span class="chip">Double Q</span></div>
+        <div class="foot"><span>Course project</span></div></div>
+      </article>
+      <article class="pcard card spot reveal" data-cat="cv">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="4.5" r="2"/><path d="M12 7v7m0 0-3 6m3-6 3 6M7 10l5-1 5 1"/></svg></div>
+        <div class="pcard-body"><span class="cat">Computer vision</span><h3>Real-Time Pose &amp; Exercise Tracking</h3>
+        <p>Reads webcam frames with MediaPipe, computes the shoulder–elbow–wrist angle and counts curls with a two-state counter (160° extension, 30° flexion).</p>
+        <div class="chips"><span class="chip">MediaPipe</span><span class="chip">OpenCV</span><span class="chip">NumPy</span></div>
+        <div class="foot"><span>Live webcam demo</span><a href="https://github.com/odra-bira/Real-Time-Pose-Detection-and-Exercise-Tracking-main" target="_blank" rel="noopener">Code →</a></div></div>
+      </article>
+      <article class="pcard card spot reveal" data-cat="llm dl">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5Z"/><path d="M9 10h.01M12 10h.01M15 10h.01"/></svg></div>
+        <div class="pcard-body"><span class="cat">NLP</span><h3>Comment Toxicity Classification</h3>
+        <p>Multi-label classifier for 6 toxicity labels on Jigsaw data: TextVectorization (200K vocab), a bidirectional LSTM and a Gradio demo.</p>
+        <div class="chips"><span class="chip">TensorFlow</span><span class="chip">Bi-LSTM</span><span class="chip">Gradio</span></div>
+        <div class="foot"><span>Multi-label NLP</span><a href="https://github.com/odra-bira/comment-toxicity-clean" target="_blank" rel="noopener">Code →</a></div></div>
+      </article>
+      <article class="pcard card spot reveal" data-cat="cv dl">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="12" cy="13" r="7"/><path d="M12 6c0-2 1.5-3 3-3"/><path d="M9 12.5a3 3 0 0 1 3-3"/></svg></div>
+        <div class="pcard-body"><span class="cat">Transfer learning · Published</span><h3>Fruit Quality Classification</h3>
+        <p>MobileNetV2 transfer learning for 6 fresh/rotten fruit classes, served through a Flask upload app. Published in IJRASET, 2025.</p>
+        <div class="chips"><span class="chip">MobileNetV2</span><span class="chip">Keras</span><span class="chip">Flask</span></div>
+        <div class="foot"><a href="https://doi.org/10.22214/ijraset.2025.68187" target="_blank" rel="noopener">Paper →</a><a href="https://github.com/odra-bira/agriculture-project" target="_blank" rel="noopener">Code →</a></div></div>
+      </article>
+      <article class="pcard card spot reveal" data-cat="ml">
+        <div class="ico"><svg viewBox="0 0 24 24"><circle cx="7" cy="8" r="2.2"/><circle cx="16" cy="6" r="2.2"/><circle cx="9" cy="17" r="2.2"/><circle cx="18" cy="16" r="2.2"/><path d="M7 8l2 9M16 6l2 10"/></svg></div>
+        <div class="pcard-body"><span class="cat">Statistical learning · R</span><h3>Unsupervised Learning &amp; Clustering</h3>
+        <p>K-means, self-organizing maps, hierarchical clustering (4 linkages) and PCA, validated with gap statistic and silhouette analysis.</p>
+        <div class="kpi">0.895 ARI · 0.953 Rand index</div>
+        <div class="chips"><span class="chip">R</span><span class="chip">tidyverse</span><span class="chip">kohonen</span></div>
+        <div class="foot"><span>Course project</span></div></div>
+      </article>
+      <article class="pcard card spot reveal" data-cat="ml">
+        <div class="ico"><svg viewBox="0 0 24 24"><path d="M3 20h18M3 20V4"/><path d="M5 17 10 12l3 3 7-8"/></svg></div>
+        <div class="pcard-body"><span class="cat">ML from scratch · CSE 574</span><h3>Elastic Net with Gradient Descent</h3>
+        <p>Elastic Net (L1 + L2) regression implemented from scratch in NumPy on a 63K-row global emissions dataset, with a leakage-safe preprocessing pipeline and studies of initialization and stopping rules.</p>
+        <div class="chips"><span class="chip">NumPy</span><span class="chip">pandas</span><span class="chip">Optimization</span></div>
+        <div class="foot"><span>Course project</span></div></div>
+      </article>
+      <article class="pcard card spot reveal" data-cat="cv">
+        <div class="ico"><svg viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15l5-4 4 3 3-2 6 5"/></svg></div>
+        <div class="pcard-body"><span class="cat">Computer vision · Capstone</span><h3>ShadowFix: model ablation</h3>
+        <p>RGB, residual and mask-guided U-Nets compared on the same 540-image test split, with region-split PSNR to expose over-correction.</p>
+        <div class="kpi">+3.0 dB overall · +2.2 dB inside shadows</div>
+        <div class="chips"><span class="chip">U-Net</span><span class="chip">AMP</span><span class="chip">PSNR / SSIM</span></div>
+        <div class="foot"><span>Evaluation</span><a href="https://github.com/odra-bira/ShadowFix" target="_blank" rel="noopener">Results →</a></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- PUBLICATION -->
+  <section id="publication">
+    <div class="sec-head reveal"><div><div class="eyebrow">05 · Publication</div><h2>Peer-reviewed.</h2></div></div>
+    <div class="card spot pub reveal">
+      <div class="badge"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5V3Z"/><path d="M14 3v5h5M8 12h8M8 16h8M8 8h3"/></svg></div>
+      <div><h3>Automated Assessment of Fruit Quality Using Transfer Learning and MobileNetV2</h3><p>Bira, O., et al. · International Journal for Research in Applied Science &amp; Engineering Technology (IJRASET), 13(4), 2025</p></div>
+      <a class="btn" href="https://doi.org/10.22214/ijraset.2025.68187" target="_blank" rel="noopener">Read paper</a>
+    </div>
+  </section>
+</div>
+
+<section class="contact" id="contact">
   <div class="wrap">
-    <div class="sec-head"><h2>Featured Projects</h2><a href="https://github.com/odra-bira?tab=repositories" target="_blank" rel="noopener">View all repositories →</a></div>
-    <div class="grid">
-
-      <article class="card">
-        <div class="thumb" aria-hidden="true">
-          <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
-            <rect width="400" height="200" fill="#0f1a2e"/>
-            <rect x="24" y="22" width="170" height="156" rx="10" fill="#14223b" stroke="#22365a"/>
-            <text x="40" y="48" fill="#e6edf8" font-family="Sora,sans-serif" font-size="15" font-weight="700">StudyEase</text>
-            <text x="40" y="66" fill="#93a3bd" font-family="Manrope,sans-serif" font-size="10">Weekly plan · 3 assignments</text>
-            <g font-family="JetBrains Mono,monospace" font-size="8.2" fill="#cdd8ea">
-              <rect x="40" y="80" width="138" height="22" rx="5" fill="#16294d"/><text x="48" y="94">Mon · Outline essay · 45m</text>
-              <rect x="40" y="108" width="138" height="22" rx="5" fill="#16294d"/><text x="48" y="122">Tue · DL problem set · 90m</text>
-              <rect x="40" y="136" width="138" height="22" rx="5" fill="#1b2a44"/><text x="48" y="150">Wed · Review &amp; submit · 30m</text>
-            </g>
-            <g font-family="JetBrains Mono,monospace" font-size="10">
-              <rect x="222" y="40" width="150" height="30" rx="8" fill="#14223b" stroke="#4c8dff"/><text x="236" y="59" fill="#e6edf8">ClaudeProvider</text>
-              <rect x="222" y="85" width="150" height="30" rx="8" fill="#14223b" stroke="#22365a"/><text x="236" y="104" fill="#cdd8ea">GeminiProvider</text>
-              <rect x="222" y="130" width="150" height="30" rx="8" fill="#14223b" stroke="#22365a"/><text x="236" y="149" fill="#cdd8ea">OllamaProvider</text>
-            </g>
-            <path d="M194 100 H214" stroke="#4c8dff" stroke-width="2"/>
-          </svg>
-        </div>
-        <div class="body">
-          <h3>StudyEase — LLM-Powered Study Planner</h3>
-          <p>Turns assignments, deadlines and free time into a weekly study plan. A provider-agnostic LLM layer runs on Claude, Gemini or a local Ollama model, and a deterministic engine checks and repairs every plan the model drafts.</p>
-          <div class="metrics"><span class="metric">5 REST endpoints</span><span class="metric">3 LLM backends</span><span class="metric">35 pytest tests</span><span class="metric">PDF / image upload</span></div>
-          <div class="chips"><span class="chip">FastAPI</span><span class="chip">React</span><span class="chip">Pydantic</span><span class="chip">Claude &amp; Gemini APIs</span><span class="chip">Ollama</span></div>
-          <div class="foot"><a href="https://github.com/odra-bira/Studyplanner" target="_blank" rel="noopener">&lt;/&gt; Code</a></div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="thumb" aria-hidden="true">
-          <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
-            <defs>
-              <linearGradient id="ground" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b7f6a"/><stop offset="1" stop-color="#6d6352"/></linearGradient>
-              <clipPath id="left"><rect width="200" height="200"/></clipPath>
-            </defs>
-            <rect width="400" height="200" fill="url(#ground)"/>
-            <g clip-path="url(#left)"><path d="M60 0 L150 0 L230 200 L90 200 Z" fill="#2a2620" opacity=".72"/></g>
-            <circle cx="120" cy="120" r="14" fill="#c7b89c"/><circle cx="300" cy="120" r="14" fill="#c7b89c"/>
-            <rect x="60" y="150" width="60" height="10" rx="3" fill="#a4977f"/><rect x="250" y="150" width="60" height="10" rx="3" fill="#a4977f"/>
-            <line x1="200" y1="0" x2="200" y2="200" stroke="#e6edf8" stroke-width="2"/>
-            <rect x="14" y="14" width="62" height="20" rx="5" fill="#070d19" opacity=".8"/><text x="22" y="28" fill="#e6edf8" font-family="JetBrains Mono,monospace" font-size="10">shadow</text>
-            <rect x="214" y="14" width="74" height="20" rx="5" fill="#070d19" opacity=".8"/><text x="222" y="28" fill="#4ade80" font-family="JetBrains Mono,monospace" font-size="10">restored</text>
-          </svg>
-        </div>
-        <div class="body">
-          <h3>ShadowFix — Image Restoration</h3>
-          <p>Compared RGB, residual and mask-guided U-Nets for shadow removal on the ISTD benchmark, then put the best model behind a Gradio app with automatic and mask-guided modes.</p>
-          <div class="metrics"><span class="metric">30.19 dB PSNR</span><span class="metric">0.951 SSIM</span><span class="metric">+3.0 dB vs baseline</span><span class="metric">540 test images</span></div>
-          <div class="chips"><span class="chip">PyTorch</span><span class="chip">U-Net</span><span class="chip">Mixed precision</span><span class="chip">OpenCV</span><span class="chip">Gradio</span></div>
-          <div class="foot"><a href="https://github.com/odra-bira/ShadowFix" target="_blank" rel="noopener">&lt;/&gt; Code</a></div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="thumb" aria-hidden="true">
-          <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
-            <rect width="400" height="200" fill="#4f5b3f"/>
-            <g fill="#5d6a4a"><circle cx="40" cy="40" r="22"/><circle cx="330" cy="160" r="30"/><circle cx="210" cy="30" r="18"/><circle cx="120" cy="170" r="20"/></g>
-            <rect x="70" y="70" width="58" height="34" rx="6" fill="#dfe8f2" opacity=".85" transform="rotate(-12 99 87)"/>
-            <rect x="240" y="96" width="40" height="56" rx="8" fill="#c9d6e4" opacity=".8"/>
-            <g fill="none" stroke="#4ade80" stroke-width="2.5"><rect x="62" y="56" width="78" height="62"/><rect x="232" y="88" width="56" height="72"/></g>
-            <g font-family="JetBrains Mono,monospace" font-size="10" fill="#070d19"><rect x="62" y="42" width="92" height="14" fill="#4ade80"/><text x="66" y="52">plastic 0.82</text><rect x="232" y="74" width="80" height="14" fill="#4ade80"/><text x="236" y="84">bottle 0.77</text></g>
-            <rect x="300" y="14" width="86" height="40" rx="8" fill="#070d19" opacity=".85"/><text x="310" y="30" fill="#93a3bd" font-family="JetBrains Mono,monospace" font-size="9">cleanliness</text><text x="310" y="47" fill="#e6edf8" font-family="Sora,sans-serif" font-size="14" font-weight="700">64 / 100</text>
-          </svg>
-        </div>
-        <div class="body">
-          <h3>Trash Detection &amp; Cleanliness Scoring</h3>
-          <p>Fine-tuned YOLOv8n on the TACO litter dataset, then built density heatmaps and a confidence- and area-weighted 0–100 cleanliness score, available through a CLI and a Gradio dashboard.</p>
-          <div class="metrics"><span class="metric">0.78 precision</span><span class="metric">30 epochs · 640 px</span><span class="metric">unit-tested</span></div>
-          <div class="chips"><span class="chip">YOLOv8</span><span class="chip">OpenCV</span><span class="chip">Gradio</span><span class="chip">pytest</span></div>
-          <div class="foot"><a href="https://github.com/odra-bira/trash_detection" target="_blank" rel="noopener">&lt;/&gt; Code</a></div>
-        </div>
-      </article>
-
-      <article class="card">
-        <div class="thumb" aria-hidden="true">
-          <svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMid slice">
-            <rect width="400" height="200" fill="#3a3027"/>
-            <rect x="0" y="150" width="400" height="50" fill="#2c241d"/>
-            <g stroke="#4c8dff" stroke-width="4" stroke-linecap="round" fill="none">
-              <path d="M200 50 L200 110"/><path d="M175 62 L225 62"/><path d="M175 62 L160 95 L182 70"/><path d="M225 62 L246 92"/><path d="M200 110 L182 150"/><path d="M200 110 L218 150"/>
-            </g>
-            <g fill="#4ade80"><circle cx="200" cy="38" r="10"/><circle cx="175" cy="62" r="5"/><circle cx="225" cy="62" r="5"/><circle cx="160" cy="95" r="5"/><circle cx="182" cy="70" r="5"/><circle cx="246" cy="92" r="5"/><circle cx="182" cy="150" r="5"/><circle cx="218" cy="150" r="5"/></g>
-            <path d="M168 88 A12 12 0 0 1 172 76" stroke="#e6edf8" stroke-width="2" fill="none"/>
-            <text x="120" y="82" fill="#e6edf8" font-family="JetBrains Mono,monospace" font-size="11">28°</text>
-            <rect x="14" y="14" width="96" height="40" rx="8" fill="#070d19" opacity=".85"/><text x="24" y="30" fill="#93a3bd" font-family="JetBrains Mono,monospace" font-size="9">curls</text><text x="24" y="47" fill="#e6edf8" font-family="Sora,sans-serif" font-size="15" font-weight="700">REPS 12</text>
-          </svg>
-        </div>
-        <div class="body">
-          <h3>Real-Time Pose &amp; Exercise Tracking</h3>
-          <p>Reads webcam frames with MediaPipe, computes the shoulder–elbow–wrist angle, and counts bicep curls with a two-state counter: extension above 160° arms it, flexion below 30° counts a rep.</p>
-          <div class="metrics"><span class="metric">live skeleton overlay</span><span class="metric">160° / 30° thresholds</span></div>
-          <div class="chips"><span class="chip">Python</span><span class="chip">MediaPipe</span><span class="chip">OpenCV</span><span class="chip">NumPy</span></div>
-          <div class="foot"><a href="https://github.com/odra-bira/Real-Time-Pose-Detection-and-Exercise-Tracking-main" target="_blank" rel="noopener">&lt;/&gt; Code</a></div>
-        </div>
-      </article>
-    </div>
-
-    <div class="more">
-      <div class="mini">
-        <div class="thumb" aria-hidden="true"><svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
-<rect width="320" height="180" fill="#0f1a2e"/>
-<g font-family="JetBrains Mono,monospace" font-size="8.5" fill="#cdd8ea">
-<rect x="16" y="18" width="120" height="26" rx="6" fill="#14223b" stroke="#22365a"/><text x="24" y="35">doc_014 · chunk 3</text>
-<rect x="16" y="52" width="120" height="26" rx="6" fill="#14223b" stroke="#4c8dff"/><text x="24" y="69">doc_102 · chunk 7</text>
-<rect x="16" y="86" width="120" height="26" rx="6" fill="#14223b" stroke="#22365a"/><text x="24" y="103">doc_057 · chunk 1</text>
-<text x="16" y="134" fill="#93a3bd">BM25 + vector</text><text x="16" y="148" fill="#93a3bd">→ rerank</text>
-</g>
-<path d="M140 65 H162" stroke="#4c8dff" stroke-width="2"/>
-<rect x="166" y="28" width="138" height="110" rx="12" fill="#16294d"/>
-<g font-family="Manrope,sans-serif" font-size="10" fill="#e6edf8"><text x="178" y="50">Answer</text></g>
-<g fill="#93a3bd"><rect x="178" y="60" width="112" height="6" rx="3"/><rect x="178" y="74" width="96" height="6" rx="3"/><rect x="178" y="88" width="104" height="6" rx="3"/></g>
-<g font-family="JetBrains Mono,monospace" font-size="9" fill="#070d19"><rect x="178" y="106" width="22" height="16" rx="4" fill="#4c8dff"/><text x="183" y="117">[1]</text><rect x="204" y="106" width="22" height="16" rx="4" fill="#4c8dff"/><text x="209" y="117">[2]</text></g>
-</svg></div>
-        <div class="mb">
-        <div class="eyebrow">RAG · LLM</div>
-        <h3>SkinGPT — RAG Knowledge Assistant</h3>
-        <p>Hybrid BM25 + vector retrieval with cross-encoder reranking and cited answers, tuned against a 1,000-question benchmark to ~75% retrieval precision.</p>
-        </div>
-      </div>
-      <div class="mini">
-        <div class="thumb" aria-hidden="true"><svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
-<rect width="320" height="180" fill="#0f1a2e"/>
-<rect x="16" y="20" width="132" height="64" rx="10" fill="#14223b" stroke="#22365a"/>
-<g fill="#93a3bd"><rect x="28" y="34" width="100" height="6" rx="3"/><rect x="28" y="48" width="84" height="6" rx="3"/><rect x="28" y="62" width="92" height="6" rx="3"/></g>
-<text x="16" y="110" fill="#93a3bd" font-family="JetBrains Mono,monospace" font-size="9">Bi-LSTM · 6 labels</text>
-<g font-family="JetBrains Mono,monospace" font-size="8.5" fill="#cdd8ea">
-<text x="168" y="30">toxic</text><rect x="234" y="22" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="22" width="58" height="9" rx="4" fill="#f87171"/>
-<text x="168" y="52">severe</text><rect x="234" y="44" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="44" width="14" height="9" rx="4" fill="#4c8dff"/>
-<text x="168" y="74">obscene</text><rect x="234" y="66" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="66" width="30" height="9" rx="4" fill="#4c8dff"/>
-<text x="168" y="96">threat</text><rect x="234" y="88" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="88" width="8" height="9" rx="4" fill="#4c8dff"/>
-<text x="168" y="118">insult</text><rect x="234" y="110" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="110" width="44" height="9" rx="4" fill="#f87171"/>
-<text x="168" y="140">identity</text><rect x="234" y="132" width="70" height="9" rx="4" fill="#1b2a44"/><rect x="234" y="132" width="10" height="9" rx="4" fill="#4c8dff"/>
-</g>
-</svg></div>
-        <div class="mb">
-        <div class="eyebrow">NLP</div>
-        <h3>Comment Toxicity Classification</h3>
-        <p>Multi-label classifier for six toxicity labels on Jigsaw data: TextVectorization, a bidirectional LSTM and a Gradio demo.</p>
-        <a href="https://github.com/odra-bira/comment-toxicity-clean" target="_blank" rel="noopener">&lt;/&gt; Code</a>
-        </div>
-      </div>
-      <div class="mini">
-        <div class="thumb" aria-hidden="true"><svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice">
-<rect width="320" height="180" fill="#1c2a1f"/>
-<rect x="0" y="130" width="320" height="50" fill="#16221a"/>
-<circle cx="90" cy="96" r="38" fill="#d94b3d"/><path d="M90 58 q6 -14 16 -16" stroke="#5b3a1e" stroke-width="4" fill="none"/><ellipse cx="104" cy="52" rx="10" ry="5" fill="#4caf50" transform="rotate(-25 104 52)"/>
-<circle cx="232" cy="98" r="36" fill="#8a6a3c"/><circle cx="220" cy="88" r="8" fill="#5e4628"/><circle cx="244" cy="108" r="10" fill="#5e4628"/><circle cx="240" cy="80" r="5" fill="#5e4628"/>
-<g font-family="JetBrains Mono,monospace" font-size="9.5">
-<rect x="46" y="146" width="88" height="20" rx="5" fill="#4ade80"/><text x="54" y="160" fill="#070d19">fresh apple</text>
-<rect x="186" y="146" width="96" height="20" rx="5" fill="#f87171"/><text x="194" y="160" fill="#070d19">rotten apple</text>
-</g>
-<text x="16" y="24" fill="#cdd8ea" font-family="JetBrains Mono,monospace" font-size="9">MobileNetV2 · 224×224</text>
-</svg></div>
-        <div class="mb">
-        <div class="eyebrow">Transfer learning · Published</div>
-        <h3>Fruit Quality Classification</h3>
-        <p>MobileNetV2 model for six fresh/rotten fruit classes behind a Flask upload app. Published in IJRASET, 2025.</p>
-        <a href="https://doi.org/10.22214/ijraset.2025.68187" target="_blank" rel="noopener">Read the paper →</a>
-        </div>
-      </div>
+    <div class="eyebrow reveal">06 · Contact</div>
+    <h2 class="reveal" style="margin-top:16px">Let's build something <span>that ships.</span></h2>
+    <p class="reveal">Open to AI/ML engineer, LLM application and research engineer roles from December 2026. Based in Buffalo, NY.</p>
+    <div class="mail reveal"><code id="email">odrabira@gmail.com</code><button class="btn sm primary" id="copyBtn" type="button">Copy email</button></div>
+    <div class="hero-actions reveal" style="margin-top:22px">
+      <a class="btn" href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener">LinkedIn</a>
+      <a class="btn" href="https://github.com/odra-bira" target="_blank" rel="noopener">GitHub</a>
+      <a class="btn" href="Odra_Bira_Resume.pdf" target="_blank" rel="noopener">Resume</a>
     </div>
   </div>
 </section>
+</main>
 
-<section id="experience" style="padding-top:0">
-  <div class="wrap">
-    <div class="sec-head"><h2>Experience</h2></div>
-    <div class="timeline">
-      <div class="job"><div class="when">Oct 2025 – Present</div><div><h3>Graduate Student Researcher</h3><div class="org">University at Buffalo</div><p>Benchmark safety-constrained diffusion planners (SafeDiffuser, ICLR 2025) as baselines for lab research on safe planning with diffusion and flow-matching models. Trained a temporal U-Net diffusion trajectory planner (1M iterations) with value-guided sampling on D4RL Walker2d on an RTX 5090 server, and showed closed-form control-barrier-function enforcement meets the same safety constraint as QP-based enforcement at 3.2&times; lower planning latency (0.64 s &rarr; 0.20 s).</p></div></div>
-      <div class="job"><div class="when">Jun 2025 – Aug 2025</div><div><h3>Full Stack Developer</h3><div class="org">Accentiqa Systems Pvt. Ltd.</div><p>Built back-end services and REST APIs behind React front ends for enterprise workflows, with relational schemas and end-to-end CRUD across UI, service and data layers.</p></div></div>
-      <div class="job"><div class="when">May 2024 – Aug 2024</div><div><h3>Software Developer Intern</h3><div class="org">Risposta Software India Pvt. Ltd.</div><p>Cut API data latency 20% by profiling and rewriting the slow SQL behind REST endpoints, and cut page-load time 30% by reworking how React/Node.js features fetched and rendered data.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<section id="contact" class="contact">
-  <div class="wrap">
-    <div class="panel">
-      <div>
-        <h2 style="font-size:26px">Let's talk</h2>
-        <p style="margin:6px 0 0;color:var(--muted)">Open to AI/ML engineering and LLM application roles. Based in Buffalo, NY.</p>
-      </div>
-      <div class="btns" style="align-items:center">
-        <span class="email" id="email">odrabira@gmail.com</span>
-        <button class="btn copy" id="copyEmail" type="button">Copy email</button>
-        <a class="btn" href="https://www.linkedin.com/in/bira-odra/" target="_blank" rel="noopener">LinkedIn</a>
-      </div>
-    </div>
-  </div>
-</section>
-<footer><div class="wrap">© 2026 Odra Bira · Built with HTML &amp; CSS</div></footer>
+<footer><div class="wrap"><span>© 2026 Odra Bira</span><span>Buffalo, NY · odrabira@gmail.com</span></div></footer>
 
 <script>
 (function(){
-  var b=document.getElementById('copyEmail');
-  b.addEventListener('click',function(){
-    var t=document.getElementById('email').textContent;
-    var done=function(){b.textContent='Copied';setTimeout(function(){b.textContent='Copy email'},1600)};
-    var sel=function(){var r=document.createRange();r.selectNodeContents(document.getElementById('email'));var s=getSelection();s.removeAllRanges();s.addRange(r);b.textContent='Selected — press Ctrl/Cmd+C'};
-    try{navigator.clipboard.writeText(t).then(done,sel)}catch(e){sel()}
+  var reduce = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  function $(s,r){return (r||document).querySelector(s)}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s))}
+
+  /* typed roles */
+  var roles=['LLM applications','RAG pipelines','diffusion planners','computer vision systems','full-stack AI products'];
+  var el=$('#typed'), ri=0;
+  if(!reduce && el){
+    var txt=roles[0], i=txt.length, del=true;
+    setTimeout(function tick(){
+      if(del){ i--; if(i<=0){ del=false; ri=(ri+1)%roles.length; txt=roles[ri]; } }
+      else { i++; if(i>=txt.length){ del=true; el.textContent=txt; return setTimeout(tick,1900); } }
+      el.textContent=txt.slice(0,Math.max(i,0)); setTimeout(tick, del?38:70);
+    },2200);
+  }
+
+  /* terminal typing (content is already in the page; re-type it once for effect) */
+  var term=$('#term');
+  if(term && !reduce){
+    var lines=$$('.term-line',term), html=lines.map(function(l){return l.innerHTML});
+    lines.forEach(function(l){l.style.visibility='hidden'});
+    var li=0;
+    (function next(){
+      if(li>=lines.length) return;
+      var l=lines[li]; l.style.visibility='visible';
+      var isCmd=l.querySelector('.p');
+      if(isCmd){
+        var full=l.textContent.replace('❯ ',''), k=0;
+        (function t(){ k++; l.innerHTML='<span class="p">❯</span> '+full.slice(0,k); if(k<full.length) setTimeout(t,45); else { l.innerHTML=html[li]; li++; setTimeout(next,260);} })();
+      } else { li++; setTimeout(next,140); }
+    })();
+  }
+
+  /* count-up */
+  function countUp(n){
+    var to=parseFloat(n.dataset.count), dec=parseInt(n.dataset.dec||'0',10), t0=null, dur=1400;
+    if(reduce){n.textContent=to.toFixed(dec);return}
+    function f(ts){ if(!t0)t0=ts; var p=Math.min((ts-t0)/dur,1), e=1-Math.pow(1-p,3); n.textContent=(to*e).toFixed(dec); if(p<1) requestAnimationFrame(f); }
+    requestAnimationFrame(f);
+  }
+  $$('[data-count]').forEach(countUp);
+
+  /* marquee: duplicate content for seamless loop */
+  var track=$('#track'); if(track){ track.innerHTML+=track.innerHTML; }
+
+  /* reveal: only elements below the first screen start hidden */
+  var vh=window.innerHeight;
+  var io='IntersectionObserver' in window ? new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ e.target.classList.remove('pre'); io.unobserve(e.target); fire(e.target);} });
+  },{threshold:.12, rootMargin:'0px 0px -40px 0px'}) : null;
+  $$('.reveal').forEach(function(r){
+    if(!io || reduce) return;
+    if(r.getBoundingClientRect().top > vh*0.95){ r.classList.add('pre'); io.observe(r); }
   });
+  /* section-specific animations triggered when visible */
+  var fired={};
+  function fire(t){
+    if(t.querySelector('#lat') && !fired.lat){ fired.lat=1; $$('#lat i').forEach(function(b){b.style.width=b.dataset.w+'%'}); }
+    if(t.querySelector('#psnr') && !fired.psnr){ fired.psnr=1; $$('#psnr i').forEach(function(b){b.style.width=b.dataset.w+'%'}); sweep(); }
+    if(t.querySelector('#planner') && !fired.planner){ fired.planner=1; planner(); }
+    if(t.querySelector('#det') && !fired.det){ fired.det=1; detect(); }
+  }
+  var watch='IntersectionObserver' in window ? new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting) fire(e.target.closest('.reveal')||e.target); })},{threshold:.3}) : null;
+  ['#lat','#psnr','#planner','#det'].forEach(function(s){ var n=$(s); if(!n) return; if(watch) watch.observe(n); else fire(n.closest('.reveal')); });
+  if(reduce){ ['#lat','#psnr'].forEach(function(s){ $$(s+' i').forEach(function(b){b.style.width=b.dataset.w+'%'}) }); }
+
+  /* planner animation loop */
+  function planner(){
+    var prov=$$('#planner .prov span'), ss=$$('#planner .sess'), msg=$('#repairMsg'), p=0;
+    function run(){
+      prov.forEach(function(s,i){s.classList.toggle('on',i===p)});
+      ss.forEach(function(s){s.classList.remove('in','ok','fix')});
+      ss.forEach(function(s,i){ setTimeout(function(){ s.classList.add('in'); if(s.dataset.fix) s.classList.add('fix'); },300+i*320); });
+      msg.textContent='validating…';
+      setTimeout(function(){ ss.forEach(function(s,i){ setTimeout(function(){s.classList.add('ok')},i*160) }); msg.textContent='repaired 1 session ✓'; },300+ss.length*320+500);
+      p=(p+1)%prov.length;
+      if(!reduce) setTimeout(run,4800);
+    }
+    run();
+  }
+
+  /* detection animation loop */
+  function detect(){
+    var bx=$$('#det .box'), heat=$('#heat'), sc=$('#clean');
+    var scores=[100,84,71,62];
+    function run(){
+      bx.forEach(function(b){b.classList.remove('on')}); heat.classList.remove('on'); sc.textContent=100;
+      bx.forEach(function(b,i){ setTimeout(function(){ b.classList.add('on'); sc.textContent=scores[i+1]; },600+i*700); });
+      setTimeout(function(){heat.classList.add('on')},600+bx.length*700);
+      if(!reduce) setTimeout(run,6200);
+    }
+    run();
+  }
+
+  /* before/after slider */
+  var ba=$('#ba'), rg=$('#baRange'), user=false;
+  function setCut(v){ ba.style.setProperty('--cut',v+'%'); rg.value=v; }
+  if(rg){ rg.addEventListener('input',function(){user=true; setCut(rg.value)}); }
+  function sweep(){
+    if(reduce||!ba) return;
+    var t0=null;
+    (function f(ts){ if(user) return; if(!t0)t0=ts; var p=(ts-t0)/2600; if(p>1) { setCut(50); return; }
+      setCut(Math.round(50+45*Math.sin(p*Math.PI*2))); requestAnimationFrame(f); })(performance.now());
+  }
+
+  /* filters */
+  $$('.filters button').forEach(function(b){
+    b.addEventListener('click',function(){
+      var f=b.dataset.f;
+      $$('.filters button').forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false')});
+      $$('#grid .pcard').forEach(function(c){ var on=f==='all'||(' '+c.dataset.cat+' ').indexOf(' '+f+' ')>-1; c.classList.toggle('hide',!on); if(on){c.classList.remove('pre')} });
+    });
+  });
+
+  /* spotlight follows the cursor */
+  $$('.spot').forEach(function(c){
+    c.addEventListener('pointermove',function(e){ var r=c.getBoundingClientRect(); c.style.setProperty('--mx',(e.clientX-r.left)+'px'); c.style.setProperty('--my',(e.clientY-r.top)+'px'); });
+  });
+
+  /* nav: progress, active link, timeline fill */
+  var prog=$('#progress'), links=$$('.nav-links a'), secs=links.map(function(a){return $(a.getAttribute('href'))}), tl=$('#timeline'), tf=$('#tlfill');
+  function onScroll(){
+    var h=document.documentElement, max=h.scrollHeight-h.clientHeight; prog.style.width=(max>0?h.scrollTop/max*100:0)+'%';
+    var y=window.scrollY+120, cur=-1; secs.forEach(function(s,i){ if(s && s.offsetTop<=y) cur=i; });
+    links.forEach(function(a,i){a.classList.toggle('active',i===cur)});
+    if(tl){ var r=tl.getBoundingClientRect(), p=Math.min(Math.max((window.innerHeight*0.7-r.top)/r.height,0),1); tf.style.height=(p*(r.height-12))+'px'; }
+  }
+  window.addEventListener('scroll',onScroll,{passive:true}); onScroll();
+
+  /* copy email */
+  var cb=$('#copyBtn');
+  cb.addEventListener('click',function(){
+    var t=$('#email').textContent;
+    function ok(){cb.textContent='Copied ✓'; setTimeout(function(){cb.textContent='Copy email'},1600)}
+    function fb(){ var s=window.getSelection(), r=document.createRange(); r.selectNodeContents($('#email')); s.removeAllRanges(); s.addRange(r); cb.textContent='Press Ctrl+C'; }
+    try{ navigator.clipboard.writeText(t).then(ok,fb) }catch(e){ fb() }
+  });
+
+  /* neural-network background */
+  var cv=$('#net');
+  if(cv && !reduce){
+    var ctx=cv.getContext('2d'), W,H,pts=[],dpr=Math.min(window.devicePixelRatio||1,2), mouse={x:-999,y:-999};
+    function size(){ W=cv.width=innerWidth*dpr; H=cv.height=innerHeight*dpr; var n=Math.min(70,Math.round(innerWidth*innerHeight/22000)); pts=[];
+      for(var i=0;i<n;i++) pts.push({x:Math.random()*W,y:Math.random()*H,vx:(Math.random()-.5)*.25*dpr,vy:(Math.random()-.5)*.25*dpr}); }
+    size(); addEventListener('resize',size);
+    addEventListener('pointermove',function(e){mouse.x=e.clientX*dpr;mouse.y=e.clientY*dpr});
+    var R=140*dpr;
+    (function loop(){
+      ctx.clearRect(0,0,W,H);
+      for(var i=0;i<pts.length;i++){ var p=pts[i]; p.x+=p.vx; p.y+=p.vy; if(p.x<0||p.x>W)p.vx*=-1; if(p.y<0||p.y>H)p.vy*=-1;
+        for(var j=i+1;j<pts.length;j++){ var q=pts[j], dx=p.x-q.x, dy=p.y-q.y, d=Math.sqrt(dx*dx+dy*dy);
+          if(d<R){ ctx.strokeStyle='rgba(79,163,255,'+(0.16*(1-d/R))+')'; ctx.lineWidth=dpr; ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(q.x,q.y); ctx.stroke(); } }
+        var md=Math.hypot(p.x-mouse.x,p.y-mouse.y);
+        ctx.fillStyle= md<R ? 'rgba(139,198,255,.9)' : 'rgba(79,163,255,.45)';
+        ctx.beginPath(); ctx.arc(p.x,p.y,(md<R?2.4:1.6)*dpr,0,6.283); ctx.fill(); }
+      requestAnimationFrame(loop);
+    })();
+  }
 })();
 </script>
+
 </body>
 </html>
