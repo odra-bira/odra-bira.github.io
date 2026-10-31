@@ -92,7 +92,9 @@ header.nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:50;backdrop-
 .term-body .p{color:var(--accent)}.term-body .k{color:#C792EA}.term-body .s{color:#C3E88D}.term-body .n{color:var(--warn)}.term-body .c{color:var(--dim)}
 .term-line{white-space:pre-wrap;word-break:break-word}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:8px;padding-bottom:30px}
+.stats{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.stat{padding:24px 22px!important}
+.stat strong{font-size:44px!important}
 .stat{padding:18px 18px 16px;border:1px solid var(--line);border-radius:14px;background:rgba(12,22,36,.6)}
 .stat strong{display:block;font:700 34px/1 var(--display);letter-spacing:-.03em}
 .stat strong em{font-style:normal;color:var(--accent)}
@@ -361,27 +363,12 @@ footer .wrap{display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
         <a class="btn" href="Odra_Bira_Resume.pdf" target="_blank" rel="noopener"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 2h8l6 6v14H6V2Zm8 0v6h6" stroke="currentColor" stroke-width="1.8" fill="none" stroke-linejoin="round"/></svg>Resume</a>
       </div>
     </div>
-    <div class="term spot" aria-label="Profile summary">
-      <div class="term-bar"><i></i><i></i><i></i><span>~/odra — zsh</span></div>
-      <div class="term-body" id="term">
-        <div class="term-line"><span class="p">❯</span> whoami</div>
-        <div class="term-line">odra-bira <span class="c"># AI/ML engineer, Buffalo NY</span></div>
-        <div class="term-line"><span class="p">❯</span> cat focus.yml</div>
-        <div class="term-line"><span class="k">research</span>: <span class="s">safe planning with diffusion models</span></div>
-        <div class="term-line"><span class="k">building</span>: <span class="s">LLM apps · RAG · computer vision</span></div>
-        <div class="term-line"><span class="k">stack</span>: [<span class="s">python</span>, <span class="s">pytorch</span>, <span class="s">fastapi</span>, <span class="s">react</span>]</div>
-        <div class="term-line"><span class="k">gpa</span>: <span class="n">3.83</span></div>
-        <div class="term-line"><span class="p">❯</span> ./status --hiring</div>
-        <div class="term-line"><span style="color:var(--ok)">●</span> open to AI/ML engineer roles</div>
-      </div>
-    </div>
-  </div>
-
-  <div class="stats">
+    <div class="stats">
     <div class="stat spot"><strong class="tnum"><span data-count="3.83" data-dec="2">3.83</span></strong><span>Graduate GPA, M.S. Computer Science</span></div>
     <div class="stat spot"><strong class="tnum"><span data-count="3">3</span></strong><span>Engineering roles: research and industry</span></div>
     <div class="stat spot"><strong class="tnum"><span data-count="12">12</span><em>+</em></strong><span>AI/ML projects, from LLMs to vision</span></div>
     <div class="stat spot"><strong class="tnum"><span data-count="1">1</span></strong><span>Peer-reviewed publication (IJRASET 2025)</span></div>
+  </div>
   </div>
 </div>
 
